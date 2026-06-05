@@ -28,6 +28,10 @@ Inside of your Astro project, you'll see the following folders and files:
 
 To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
 
+## Website Previews
+<img width="1919" height="1071" alt="Screenshot 2026-06-05 205315" src="https://github.com/user-attachments/assets/909697d4-243c-44cd-be3a-a458a7bf09aa" /> <img width="1919" height="1069" alt="Screenshot 2026-06-05 205828" src="https://github.com/user-attachments/assets/0e0d09fe-bf87-44d4-a2d4-4e468e15de9a" /> <img width="1919" height="1069" alt="Screenshot 2026-06-05 205900" src="https://github.com/user-attachments/assets/fe20530a-e00e-4a41-ab11-9ca6d32a44e1" /> <img width="1919" height="1021" alt="Screenshot 2026-06-05 205932" src="https://github.com/user-attachments/assets/89ea3f53-b83f-42d1-998a-1232658229bd" /> <img width="1919" height="1067" alt="Screenshot 2026-06-05 210006" src="https://github.com/user-attachments/assets/1580f734-d8fe-47bb-b33b-7579cae387a6" /> <img width="1919" height="1071" alt="Screenshot 2026-06-05 210024" src="https://github.com/user-attachments/assets/92e93f83-8cc7-4f61-8678-b6c4bf8d767e" /> <img width="1919" height="1069" alt="Screenshot 2026-06-05 210038" src="https://github.com/user-attachments/assets/339b34ed-3c83-4850-b4f4-a7c9cc86759c" />
+
+
 ## 🧞 Commands
 
 All commands are run from the root of the project, from a terminal:
