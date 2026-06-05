@@ -41,6 +41,50 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## 🤝 Looking for Contributors
+
+Hello everyone!
+
+This project aims to build a comprehensive and interactive platform for exploring world history, including civilizations, kingdoms, empires, historical events, maps, timelines, and educational resources.
+
+The project is still under active development, and I am looking for contributors who are interested in:
+
+* Frontend development (React, Next.js, UI/UX)
+* Backend development (APIs, databases, authentication)
+* Historical data collection and verification
+* Data visualization and mapping
+* Performance optimization
+* Testing and bug fixing
+* Documentation improvements
+* Educational content creation
+
+### How You Can Help
+
+If you would like to contribute, feel free to:
+
+* Open an issue to discuss ideas
+* Submit bug reports
+* Suggest new features
+* Create pull requests
+* Improve documentation
+* Expand historical datasets
+
+### Future Goals
+
+Some major features planned for future releases include:
+
+* Interactive historical maps
+* Empire expansion visualizations
+* AI-powered history assistant
+* Advanced timeline exploration
+* Multi-language support
+* Historical figure database
+* Educational quizzes and learning modules
+
+Every contribution, no matter how small, is greatly appreciated.
+
+If you're interested in helping shape the future of this project, please open an issue or submit a pull request.
+
+Thank you for your support and contributions!
