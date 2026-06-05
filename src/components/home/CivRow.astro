@@ -1,0 +1,192 @@
+---
+import civs from '../../data/civilizations.json';
+const featured = civs.slice(0, 6);
+---
+
+<section class="civrow-section section-sm" aria-labelledby="civ-row-heading">
+  <div class="container">
+    <div class="civrow-header">
+      <div>
+        <p class="eyebrow">Civilizations</p>
+        <h2 id="civ-row-heading" class="text-display-md civrow-title">
+          Explore 127+ civilizations.
+        </h2>
+      </div>
+      <a href="/civilizations" class="btn btn-secondary civrow-all-btn" id="view-all-civs-btn">
+        View all →
+      </a>
+    </div>
+
+    <div class="civrow-grid">
+      {featured.map((civ, i) => (
+        <a
+          href={`/civilizations/${civ.id}`}
+          class="civ-card animate-fade-in-up"
+          style={`animation-delay: ${i * 60}ms; --civ-color: ${civ.color}`}
+          aria-label={`${civ.name}: ${civ.description}`}
+        >
+          <!-- Top gradient bar -->
+          <div class="civ-card-bar" aria-hidden="true"></div>
+
+          <div class="civ-card-body">
+            <div class="civ-card-meta">
+              <span class="civ-card-region text-mono">{civ.region}</span>
+              <span class="civ-card-events text-mono">
+                {civ.eventCount} events
+              </span>
+            </div>
+
+            <h3 class="civ-card-name text-display-sm">{civ.name}</h3>
+
+            <p class="civ-card-dates text-mono">
+              {civ.start < 0 ? `${Math.abs(civ.start).toLocaleString()} BCE` : `${civ.start} CE`}
+              {' — '}
+              {civ.end < 0 ? `${Math.abs(civ.end).toLocaleString()} BCE` : `${civ.end} CE`}
+            </p>
+
+            <p class="civ-card-desc text-body-sm">{civ.description}</p>
+
+            <div class="civ-card-tags">
+              {civ.keyFacts.slice(0, 2).map(fact => (
+                <span class="civ-tag">{fact}</span>
+              ))}
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .civrow-section {
+    background: var(--color-bg-card);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .civrow-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+  .civrow-title { font-size: 24px; margin-top: var(--space-xs); }
+  .civrow-all-btn {
+    height: 36px;
+    padding: 0 var(--space-sm);
+    font-size: var(--text-body-sm);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  .civrow-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .civ-card {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-1);
+  }
+  .civ-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-3);
+    border-color: var(--civ-color, var(--color-border-strong));
+  }
+  .civ-card:hover .civ-card-bar {
+    height: 4px;
+    opacity: 1;
+  }
+
+  .civ-card-bar {
+    width: 100%;
+    height: 3px;
+    background: var(--civ-color);
+    opacity: 0.7;
+    transition: height var(--transition-normal), opacity var(--transition-normal);
+    flex-shrink: 0;
+  }
+
+  .civ-card-body {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    flex: 1;
+  }
+
+  .civ-card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+  .civ-card-region {
+    font-size: 10px;
+    color: var(--civ-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .civ-card-events {
+    font-size: 10px;
+    color: var(--color-mute);
+  }
+
+  .civ-card-name {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-top: 2px;
+  }
+  .civ-card-dates {
+    font-size: 10px;
+    color: var(--color-mute);
+  }
+  .civ-card-desc {
+    color: var(--color-body);
+    font-size: 13px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .civ-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: var(--space-xs);
+  }
+  .civ-tag {
+    font-size: 10px;
+    color: var(--color-mute);
+    background: var(--color-bg-soft);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 2px 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+
+  @media (max-width: 959px) {
+    .civrow-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 599px) {
+    .civrow-grid { grid-template-columns: 1fr; }
+    .civrow-header { align-items: flex-start; flex-direction: column; }
+  }
+</style>

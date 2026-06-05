@@ -1,0 +1,419 @@
+[
+  {
+    "id": "julius-caesar",
+    "name": "Julius Caesar",
+    "born": -100,
+    "died": -44,
+    "civilization": "rome",
+    "role": "General, Statesman & Dictator",
+    "era": "classical",
+    "region": "Europe",
+    "significance": "Transformed the Roman Republic into what would become the Roman Empire. His assassination sparked civil war and ultimately the end of the Republic.",
+    "biography": "Gaius Julius Caesar was a Roman general and statesman who played a critical role in the events that led to the demise of the Roman Republic and the rise of the Roman Empire. His conquests of Gaul extended Rome to the Atlantic Ocean, and he was the first Roman general to cross the Rhine and invade Britain.",
+    "keyEvents": [
+      { "year": -60, "event": "First Triumvirate with Pompey and Crassus" },
+      { "year": -58, "event": "Beginning of Gallic Wars" },
+      { "year": -49, "event": "Crossed the Rubicon — Civil War begins" },
+      { "year": -48, "event": "Battle of Pharsalus — defeats Pompey" },
+      { "year": -44, "event": "Assassinated on the Ides of March" }
+    ],
+    "relationships": [
+      { "person": "cleopatra", "type": "Ally/Lover" },
+      { "person": "augustus", "type": "Adopted heir" }
+    ],
+    "tags": ["rome", "classical", "military", "political"]
+  },
+  {
+    "id": "cleopatra",
+    "name": "Cleopatra VII",
+    "born": -69,
+    "died": -30,
+    "civilization": "egypt",
+    "role": "Queen of Ptolemaic Egypt",
+    "era": "classical",
+    "region": "Africa / Middle East",
+    "significance": "The last active ruler of the Ptolemaic Kingdom of Egypt. She aligned with Julius Caesar and Mark Antony, influencing Roman civil wars before Egypt was annexed.",
+    "biography": "Cleopatra VII Philopator was queen of the Ptolemaic Kingdom of Egypt from 51 to 30 BCE. Famous for her intelligence, political skill, and romance with Roman leaders, she fought to preserve Egypt's independence against Rome's expanding power.",
+    "keyEvents": [
+      { "year": -51, "event": "Ascended to the Egyptian throne" },
+      { "year": -48, "event": "Met Julius Caesar, secured his support" },
+      { "year": -41, "event": "Formed political alliance with Mark Antony" },
+      { "year": -31, "event": "Battle of Actium — fleet defeated by Octavian" },
+      { "year": -30, "event": "Committed suicide following Octavian's invasion" }
+    ],
+    "relationships": [
+      { "person": "julius-caesar", "type": "Ally/Lover" },
+      { "person": "augustus", "type": "Enemy/Conqueror" }
+    ],
+    "tags": ["egypt", "classical", "political", "ruler"]
+  },
+  {
+    "id": "augustus",
+    "name": "Augustus Caesar",
+    "born": -63,
+    "died": 14,
+    "civilization": "rome",
+    "role": "First Emperor of the Roman Empire",
+    "era": "classical",
+    "region": "Europe",
+    "significance": "Founded the Roman Principate and became the first Roman Emperor. He initiated the Pax Romana, a 200-year period of peace and stability in the Mediterranean world.",
+    "biography": "Augustus (born Gaius Octavius) was adopted by his great-uncle Julius Caesar. After Caesar's assassination, Octavius formed the Second Triumvirate, defeated Caesar's assassins, and later defeated Mark Antony at the Battle of Actium to consolidate absolute control.",
+    "keyEvents": [
+      { "year": -44, "event": "Adopted by Julius Caesar in his will" },
+      { "year": -43, "event": "Formed Second Triumvirate with Antony and Lepidus" },
+      { "year": -31, "event": "Defeated Antony and Cleopatra at Actium" },
+      { "year": -27, "event": "Renamed Augustus; established Roman Empire" },
+      { "year": 9, "event": "Battle of Teutoburg Forest — loss of three legions" }
+    ],
+    "relationships": [
+      { "person": "julius-caesar", "type": "Adopted father" },
+      { "person": "cleopatra", "type": "Enemy" }
+    ],
+    "tags": ["rome", "classical", "political", "emperor"]
+  },
+  {
+    "id": "alexander-the-great",
+    "name": "Alexander the Great",
+    "born": -356,
+    "died": -323,
+    "civilization": "greece",
+    "role": "King of Macedon, Conqueror",
+    "era": "classical",
+    "region": "Europe / Asia",
+    "significance": "Created one of the largest empires in ancient history, from Greece to northwestern India, spreading Hellenistic culture across three continents.",
+    "biography": "Alexander III of Macedon, known as Alexander the Great, was a king of the ancient Greek kingdom of Macedon. He spent most of his ruling years conducting a lengthy military campaign throughout western Asia, central Asia, and northern India.",
+    "keyEvents": [
+      { "year": -336, "event": "Became King of Macedon at age 20" },
+      { "year": -334, "event": "Invaded the Persian Empire" },
+      { "year": -331, "event": "Founded Alexandria, Egypt" },
+      { "year": -326, "event": "Battle of the Hydaspes — reached India" },
+      { "year": -323, "event": "Died in Babylon at age 32" }
+    ],
+    "relationships": [
+      { "person": "aristotle", "type": "Teacher" },
+      { "person": "socrates", "type": "Philosophical lineage" }
+    ],
+    "tags": ["greece", "classical", "military", "conquest"]
+  },
+  {
+    "id": "socrates",
+    "name": "Socrates",
+    "born": -470,
+    "died": -399,
+    "civilization": "greece",
+    "role": "Philosopher",
+    "era": "classical",
+    "region": "Europe",
+    "significance": "One of the founders of Western philosophy. He developed the Socratic Method of inquiry and taught Plato, who in turn taught Aristotle.",
+    "biography": "Socrates was a classical Greek philosopher credited as one of the founders of Western philosophy, and as being the first moral philosopher of the Western ethical tradition of thought. He made no writings himself, so his ideas are known through his student Plato.",
+    "keyEvents": [
+      { "year": -431, "event": "Served in the Peloponnesian War" },
+      { "year": -406, "event": "Opposed illegal trial of Athenian generals" },
+      { "year": -399, "event": "Tried and sentenced to death by hemlock" }
+    ],
+    "relationships": [
+      { "person": "aristotle", "type": "Philosophical successor" },
+      { "person": "alexander-the-great", "type": "Student's student" }
+    ],
+    "tags": ["greece", "classical", "philosophy"]
+  },
+  {
+    "id": "aristotle",
+    "name": "Aristotle",
+    "born": -384,
+    "died": -322,
+    "civilization": "greece",
+    "role": "Polymath & Philosopher",
+    "era": "classical",
+    "region": "Europe",
+    "significance": "His writings covered physics, biology, logic, ethics, poetry, and politics, shaping medieval Islamic and Christian scholasticism. He tutored Alexander the Great.",
+    "biography": "Aristotle was an Ancient Greek philosopher and polymath. His writings cover many subjects including physics, biology, zoology, metaphysics, logic, ethics, aesthetics, poetry, theater, music, rhetoric, psychology, linguistics, economics, politics, meteorology, geology, and government.",
+    "keyEvents": [
+      { "year": -367, "event": "Joined Plato's Academy in Athens" },
+      { "year": -343, "event": "Began tutoring Alexander the Great" },
+      { "year": -335, "event": "Founded the Lyceum in Athens" },
+      { "year": -322, "event": "Fled to Chalcis, died of natural causes" }
+    ],
+    "relationships": [
+      { "person": "alexander-the-great", "type": "Student" },
+      { "person": "socrates", "type": "Teacher's teacher" }
+    ],
+    "tags": ["greece", "classical", "philosophy", "science"]
+  },
+  {
+    "id": "ashoka",
+    "name": "Ashoka the Great",
+    "born": -304,
+    "died": -232,
+    "civilization": "india",
+    "role": "Emperor of the Maurya Empire",
+    "era": "classical",
+    "region": "South Asia",
+    "significance": "After the bloody Kalinga War, he embraced Buddhism and championed non-violence, tolerance, and welfare. His Edicts are among the earliest evidence of a ruler committing to human rights.",
+    "biography": "Ashoka, also known as Ashoka the Great, was an Indian emperor of the Maurya dynasty. He ruled almost all of the Indian subcontinent from c. 268 to 232 BCE. After the devastating Kalinga War, he adopted Buddhism and non-violence.",
+    "keyEvents": [
+      { "year": -272, "event": "Became Emperor after struggle for succession" },
+      { "year": -261, "event": "Kalinga War — turning point" },
+      { "year": -260, "event": "Converted to Buddhism" },
+      { "year": -250, "event": "Issued the Edicts of Ashoka" }
+    ],
+    "relationships": [],
+    "tags": ["india", "classical", "buddhism", "maurya"]
+  },
+  {
+    "id": "buddha",
+    "name": "Gautama Buddha",
+    "born": -563,
+    "died": -483,
+    "civilization": "india",
+    "role": "Spiritual Teacher & Founder of Buddhism",
+    "era": "classical",
+    "region": "South Asia",
+    "significance": "Founded Buddhism, teaching the Middle Way, the Four Noble Truths, and the Eightfold Path to escape suffering and achieve Nirvana.",
+    "biography": "Siddhartha Gautama, commonly known as the Buddha, was a spiritual teacher and philosopher from ancient India. Born a prince of the Shakya clan, he renounced his wealth to seek enlightenment and dedicated his life to teaching non-violence and mental liberation.",
+    "keyEvents": [
+      { "year": -534, "event": "Renounced his princely life" },
+      { "year": -528, "event": "Achieved Enlightenment under Bodhi Tree" },
+      { "year": -528, "event": "Delivered first sermon at Sarnath" },
+      { "year": -483, "event": "Attained Parinirvana in Kushinagar" }
+    ],
+    "relationships": [
+      { "person": "confucius", "type": "Contemporary philosopher" }
+    ],
+    "tags": ["india", "classical", "religion", "philosophy"]
+  },
+  {
+    "id": "confucius",
+    "name": "Confucius",
+    "born": -551,
+    "died": -479,
+    "civilization": "china",
+    "role": "Philosopher & Teacher",
+    "era": "classical",
+    "region": "East Asia",
+    "significance": "His philosophy of social order, filial piety, ethics, and government laid the foundations of Chinese culture and bureaucracy for over two thousand years.",
+    "biography": "Confucius was a Chinese philosopher and politician of the Spring and Autumn period. His teachings, preserved in the Analects, emphasize personal and governmental morality, correctness of social relationships, justice, kindness, and sincerity.",
+    "keyEvents": [
+      { "year": -501, "event": "Appointed Governor of Lu" },
+      { "year": -497, "event": "Began long exile, traveling to teach" },
+      { "year": -484, "event": "Returned to Lu to teach and write Analects" }
+    ],
+    "relationships": [
+      { "person": "buddha", "type": "Contemporary philosopher" },
+      { "person": "qin-shi-huang", "type": "Opposed by his successor's regime" }
+    ],
+    "tags": ["china", "classical", "philosophy", "education"]
+  },
+  {
+    "id": "qin-shi-huang",
+    "name": "Qin Shi Huang",
+    "born": -259,
+    "died": -210,
+    "civilization": "china",
+    "role": "First Emperor of Unified China",
+    "era": "classical",
+    "region": "East Asia",
+    "significance": "Unified China's warring states, standardized writing, measurements, and currency, initiated the Great Wall, and commissioned the Terracotta Army.",
+    "biography": "Qin Shi Huang was the founder of the Qin dynasty and the first emperor of a unified China. Rather than maintaining the title of 'king' borne by the previous Shang and Zhou rulers, he ruled as the First Emperor from 221 to 210 BCE.",
+    "keyEvents": [
+      { "year": -247, "event": "Became King Zheng of Qin state" },
+      { "year": -221, "event": "Conquered war kingdoms, unified China" },
+      { "year": -215, "event": "Began construction of the Great Wall" },
+      { "year": -213, "event": "Ordered the burning of books and burying of scholars" },
+      { "year": -210, "event": "Died; buried with Terracotta Army" }
+    ],
+    "relationships": [
+      { "person": "confucius", "type": "Suppressed Confucian scholars" }
+    ],
+    "tags": ["china", "classical", "political", "emperor"]
+  },
+  {
+    "id": "genghis-khan",
+    "name": "Genghis Khan",
+    "born": 1162,
+    "died": 1227,
+    "civilization": "mongols",
+    "role": "Founder & Great Khan of the Mongol Empire",
+    "era": "medieval",
+    "region": "Central Asia",
+    "significance": "United the Mongol tribes and built the largest contiguous land empire in history. Facilitated Silk Road trade (Pax Mongolica) while conducting devastating conquests.",
+    "biography": "Genghis Khan was the founder and first Great Khan of the Mongol Empire, which became the largest contiguous empire in history after his death. He came to power by uniting many of the nomadic tribes of northeast Asia.",
+    "keyEvents": [
+      { "year": 1206, "event": "Proclaimed Great Khan, unified Mongols" },
+      { "year": 1211, "event": "Invasion of Jin Dynasty (northern China)" },
+      { "year": 1219, "event": "Invasion of Khwarezmian Empire" },
+      { "year": 1227, "event": "Death during campaign against Western Xia" }
+    ],
+    "relationships": [],
+    "tags": ["mongols", "medieval", "conquest", "steppe"]
+  },
+  {
+    "id": "joan-of-arc",
+    "name": "Joan of Arc",
+    "born": 1412,
+    "died": 1431,
+    "civilization": "france",
+    "role": "Military Leader & Saint",
+    "era": "early-modern",
+    "region": "Europe",
+    "significance": "French peasant girl who led French armies to victory during the Hundred Years' War. Executed by the English, she became a national heroine and patron saint of France.",
+    "biography": "Jeanne d'Arc, nicknamed the 'Maid of Orléans,' is considered a heroine of France for her role during the Lancastrian phase of the Hundred Years' War. Claiming divine guidance, she lifted the Siege of Orléans in nine days, paving the way for Charles VII's coronation.",
+    "keyEvents": [
+      { "year": 1428, "event": "Began hearing voices guiding her to Charles VII" },
+      { "year": 1429, "event": "Relieved the Siege of Orléans" },
+      { "year": 1430, "event": "Captured by Burgundian forces" },
+      { "year": 1431, "event": "Burned at the stake for heresy in Rouen" }
+    ],
+    "relationships": [],
+    "tags": ["france", "early-modern", "military", "religion"]
+  },
+  {
+    "id": "leonardo-da-vinci",
+    "name": "Leonardo da Vinci",
+    "born": 1452,
+    "died": 1519,
+    "civilization": "italian-states",
+    "role": "Renaissance Polymath, Artist & Scientist",
+    "era": "early-modern",
+    "region": "Europe",
+    "significance": "The ultimate archetype of the 'Renaissance Man.' Created iconic paintings (Mona Lisa, The Last Supper) while drafting advanced conceptual inventions (flying machines, anatomy).",
+    "biography": "Leonardo da Vinci was an Italian polymath of the High Renaissance who was active as a painter, draughtsman, engineer, scientist, theorist, sculptor, and architect. Widely considered one of the greatest painters in history, he was also celebrated for his technological designs.",
+    "keyEvents": [
+      { "year": 1466, "event": "Apprenticed in Florence under Verrocchio" },
+      { "year": 1482, "event": "Moved to Milan, painted 'The Last Supper'" },
+      { "year": 1503, "event": "Began painting the 'Mona Lisa'" },
+      { "year": 1519, "event": "Died in Clos Lucé, France" }
+    ],
+    "relationships": [],
+    "tags": ["art", "renaissance", "early-modern", "scientific"]
+  },
+  {
+    "id": "napoleon",
+    "name": "Napoleon Bonaparte",
+    "born": 1769,
+    "died": 1821,
+    "civilization": "french-empire",
+    "role": "Emperor of the French, Military Commander",
+    "era": "industrial",
+    "region": "Europe",
+    "significance": "Shaped modern Europe through the Napoleonic Wars, spread Revolutionary ideals, codified French law (Napoleonic Code), and restructured European borders.",
+    "biography": "Napoleon Bonaparte was a French military commander and political leader who rose to prominence during the French Revolution and led several successful campaigns during the Revolutionary Wars.",
+    "keyEvents": [
+      { "year": 1799, "event": "18 Brumaire coup — becomes First Consul" },
+      { "year": 1804, "event": "Crowned Emperor of the French" },
+      { "year": 1805, "event": "Battle of Austerlitz — greatest victory" },
+      { "year": 1812, "event": "Catastrophic Russian campaign" },
+      { "year": 1815, "event": "Waterloo — final defeat and exile" }
+    ],
+    "relationships": [],
+    "tags": ["france", "industrial", "military", "revolution"]
+  },
+  {
+    "id": "abraham-lincoln",
+    "name": "Abraham Lincoln",
+    "born": 1809,
+    "died": 1865,
+    "civilization": "usa",
+    "role": "16th President of the United States",
+    "era": "industrial",
+    "region": "North America",
+    "significance": "Led the United States through the Civil War, preserved the Union, and abolished slavery with the Emancipation Proclamation.",
+    "biography": "Abraham Lincoln was an American lawyer, politician, and statesman who served as the 16th president of the United States from 1861 until his assassination in 1865.",
+    "keyEvents": [
+      { "year": 1860, "event": "Elected 16th President" },
+      { "year": 1861, "event": "Civil War begins" },
+      { "year": 1863, "event": "Emancipation Proclamation" },
+      { "year": 1865, "event": "Assassinated at Ford's Theatre" }
+    ],
+    "relationships": [],
+    "tags": ["usa", "industrial", "civil-war", "slavery"]
+  },
+  {
+    "id": "albert-einstein",
+    "name": "Albert Einstein",
+    "born": 1879,
+    "died": 1955,
+    "civilization": "usa",
+    "role": "Theoretical Physicist",
+    "era": "modern",
+    "region": "Europe / North America",
+    "significance": "Developed the theory of relativity, which revolutionized modern physics alongside quantum mechanics. Famous for the equation E=mc² and received the Nobel Prize.",
+    "biography": "Albert Einstein was a German-born theoretical physicist, widely acknowledged to be one of the greatest and most influential physicists of all time. He is best known for developing the theory of relativity, but also made important contributions to quantum mechanics.",
+    "keyEvents": [
+      { "year": 1905, "event": "Annus Mirabilis — published papers on Special Relativity and Photoelectric Effect" },
+      { "year": 1915, "event": "Presented theory of General Relativity" },
+      { "year": 1921, "event": "Awarded Nobel Prize in Physics" },
+      { "year": 1933, "event": "Emigrated to USA to escape Nazi Germany" },
+      { "year": 1939, "event": "Signed Einstein-Szilard letter advocating atomic research" }
+    ],
+    "relationships": [],
+    "tags": ["science", "modern", "physics", "education"]
+  },
+  {
+    "id": "mahatma-gandhi",
+    "name": "Mahatma Gandhi",
+    "born": 1869,
+    "died": 1948,
+    "civilization": "india",
+    "role": "Independence Leader, Father of Nation",
+    "era": "modern",
+    "region": "South Asia",
+    "significance": "Led India's non-violent independence movement against British rule, pioneering the philosophy of Satyagraha (non-violent resistance) that influenced civil rights movements worldwide.",
+    "biography": "Mohandas Karamchand Gandhi was an Indian lawyer, anti-colonial nationalist, and political ethicist who employed nonviolent resistance to lead the successful campaign for India's independence from British rule.",
+    "keyEvents": [
+      { "year": 1915, "event": "Returned to India from South Africa" },
+      { "year": 1930, "event": "Salt March — defying British salt tax" },
+      { "year": 1942, "event": "Quit India Movement" },
+      { "year": 1947, "event": "Indian Independence" },
+      { "year": 1948, "event": "Assassinated in New Delhi" }
+    ],
+    "relationships": [
+      { "person": "martin-luther-king", "type": "Inspired" }
+    ],
+    "tags": ["india", "modern", "independence", "nonviolence"]
+  },
+  {
+    "id": "winston-churchill",
+    "name": "Winston Churchill",
+    "born": 1874,
+    "died": 1965,
+    "civilization": "british-empire",
+    "role": "Prime Minister of the United Kingdom",
+    "era": "modern",
+    "region": "Europe",
+    "significance": "Led Britain through World War II as Prime Minister, delivering some of history's most famous wartime speeches. His leadership is credited as crucial to Allied victory.",
+    "biography": "Sir Winston Leonard Spencer Churchill was a British statesman, soldier, and writer who served as Prime Minister of the United Kingdom during the Second World War and again from 1951 to 1955.",
+    "keyEvents": [
+      { "year": 1940, "event": "Became Prime Minister during Dunkirk crisis" },
+      { "year": 1940, "event": "Battle of Britain — 'Their Finest Hour' speech" },
+      { "year": 1943, "event": "Tehran Conference with Roosevelt and Stalin" },
+      { "year": 1945, "event": "Victory in Europe (VE Day)" }
+    ],
+    "relationships": [
+      { "person": "winston-churchill", "type": "Self" }
+    ],
+    "tags": ["britain", "modern", "wwii", "politics"]
+  },
+  {
+    "id": "martin-luther-king",
+    "name": "Martin Luther King Jr.",
+    "born": 1929,
+    "died": 1968,
+    "civilization": "usa",
+    "role": "Civil Rights Leader",
+    "era": "modern",
+    "region": "North America",
+    "significance": "Led the American Civil Rights Movement using non-violent resistance, advocating for racial equality, voting rights, and desegregation. Famous for his 'I Have a Dream' speech.",
+    "biography": "Martin Luther King Jr. was an American Baptist minister and activist who became the most visible spokesperson and leader in the civil rights movement from 1955 until his assassination in 1968.",
+    "keyEvents": [
+      { "year": 1955, "event": "Led Montgomery bus boycott" },
+      { "year": 1963, "event": "Led March on Washington, 'I Have a Dream' speech" },
+      { "year": 1964, "event": "Awarded Nobel Peace Prize" },
+      { "year": 1968, "event": "Assassinated in Memphis, Tennessee" }
+    ],
+    "relationships": [
+      { "person": "mahatma-gandhi", "type": "Inspired by" }
+    ],
+    "tags": ["usa", "modern", "civil-rights", "nonviolence"]
+  }
+]

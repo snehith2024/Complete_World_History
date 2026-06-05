@@ -1,0 +1,444 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const today = new Date();
+const todayStr = today.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+// Comprehensive On This Day events
+const otdEvents = [
+  {
+    year: -44,
+    title: "Julius Caesar Assassinated",
+    description: "On the Ides of March, Roman dictator Julius Caesar was stabbed 23 times on the steps of the Theatre of Pompey by a group of senators including Brutus and Cassius. His death ended the Roman Republic.",
+    type: "death",
+    era: "classical",
+    link: "/figures/julius-caesar",
+    tags: ["rome", "assassination", "republic"],
+  },
+  {
+    year: 1564,
+    title: "William Shakespeare Born",
+    description: "The world's greatest playwright was born in Stratford-upon-Avon, England. His works — 37 plays and 154 sonnets — have been translated into every major language.",
+    type: "birth",
+    era: "early-modern",
+    link: "/figures",
+    tags: ["england", "literature", "renaissance"],
+  },
+  {
+    year: 1848,
+    title: "Marx & Engels Publish Communist Manifesto",
+    description: "Karl Marx and Friedrich Engels publish 'The Communist Manifesto' in London, a political pamphlet that would shape the political landscape of the 20th century.",
+    type: "event",
+    era: "industrial",
+    link: "/timeline#communist-manifesto",
+    tags: ["politics", "economics", "revolution"],
+  },
+  {
+    year: 1945,
+    title: "World War II Ends in Europe (VE Day)",
+    description: "Nazi Germany unconditionally surrenders to the Allied forces. Victory in Europe Day is celebrated across the Western world, ending six years of war.",
+    type: "event",
+    era: "modern",
+    link: "/timeline#wwii",
+    tags: ["wwii", "victory", "europe"],
+  },
+  {
+    year: 1961,
+    title: "First Human in Space — Yuri Gagarin",
+    description: "Soviet cosmonaut Yuri Gagarin becomes the first human to travel to outer space, completing one orbit of Earth in the Vostok 1 spacecraft in 108 minutes.",
+    type: "discovery",
+    era: "modern",
+    link: "/timeline",
+    tags: ["space", "soviet", "cold-war"],
+  },
+  {
+    year: 1453,
+    title: "Fall of Constantinople",
+    description: "Ottoman forces under Mehmed II breach the walls of Constantinople, ending the Byzantine Empire after 1,000 years. The city is renamed Istanbul.",
+    type: "event",
+    era: "medieval",
+    link: "/civilizations/ottoman",
+    tags: ["ottoman", "byzantine", "medieval"],
+  },
+  {
+    year: 1215,
+    title: "King John Signs Magna Carta",
+    description: "Under pressure from rebellious barons, King John of England seals Magna Carta, the first document to formally limit the power of an English king.",
+    type: "event",
+    era: "medieval",
+    link: "/timeline#magna-carta",
+    tags: ["england", "law", "rights"],
+  },
+  {
+    year: 1865,
+    title: "Abraham Lincoln Assassinated",
+    description: "President Abraham Lincoln is shot by John Wilkes Booth at Ford's Theatre in Washington D.C. He dies the following morning, becoming the first U.S. president to be assassinated.",
+    type: "death",
+    era: "industrial",
+    link: "/figures/abraham-lincoln",
+    tags: ["usa", "civil-war", "assassination"],
+  },
+];
+
+const typeIcons: Record<string, string> = {
+  birth: '👶',
+  death: '✝',
+  event: '⚡',
+  discovery: '🔭',
+};
+
+const typeColors: Record<string, string> = {
+  birth:     '#50e3c2',
+  death:     '#ff4d4d',
+  event:     '#007cf0',
+  discovery: '#f9cb28',
+};
+
+const eraColors: Record<string, string> = {
+  universe:      '#f9cb28',
+  ancient:       '#f5a623',
+  classical:     '#00dfd8',
+  medieval:      '#9c5de8',
+  'early-modern':'#007cf0',
+  industrial:    '#ff4d4d',
+  modern:        '#50e3c2',
+};
+---
+
+<Layout
+  title="On This Day"
+  description={`Discover what happened on ${todayStr} throughout history — births, deaths, discoveries, and pivotal events.`}
+>
+  <div class="otd-page" style="padding-top: var(--nav-height)">
+
+    <!-- Hero -->
+    <div class="otd-page-hero">
+      <div class="mesh-gradient" aria-hidden="true"></div>
+      <div class="container-content otd-hero-inner">
+        <p class="eyebrow">On This Day</p>
+        <h1 class="text-display-xl otd-hero-heading">
+          <span class="gradient-text-develop">{today.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</span><br/>
+          in history.
+        </h1>
+        <p class="text-body-lg otd-hero-sub">
+          Every year, on this exact date, history was being made. Here's what happened.
+        </p>
+
+        <!-- Date badge -->
+        <div class="otd-date-badge text-mono">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <rect x="1" y="2" width="10" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M4 1v2M8 1v2M1 5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          {todayStr}
+        </div>
+      </div>
+    </div>
+
+    <!-- Type filters -->
+    <div class="otd-filter-bar">
+      <div class="container-content otd-filters-inner">
+        <div class="otd-type-filters" role="group" aria-label="Filter by event type">
+          {['all', 'birth', 'death', 'event', 'discovery'].map((type, i) => (
+            <button
+              class={`otd-type-btn text-mono ${i === 0 ? 'active' : ''}`}
+              data-type={type}
+              style={type !== 'all' ? `--tc: ${typeColors[type]}` : ''}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+            >
+              {type !== 'all' && <span class="otd-type-icon" aria-hidden="true">{typeIcons[type]}</span>}
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </button>
+          ))}
+        </div>
+        <span class="filter-count text-mono" id="otd-count" aria-live="polite">{otdEvents.length} events</span>
+      </div>
+    </div>
+
+    <!-- Events list -->
+    <div class="container-content otd-events-list" id="otd-events-container" aria-label="Historical events list">
+      {otdEvents.sort((a, b) => a.year - b.year).map((ev, i) => (
+        <article
+          class="otd-event-full animate-fade-in-up"
+          data-type={ev.type}
+          style={`animation-delay: ${i * 70}ms; --ev-c: ${typeColors[ev.type] ?? '#007cf0'}; --era-c: ${eraColors[ev.era] ?? '#007cf0'}`}
+          aria-label={`${ev.title}, ${ev.year < 0 ? Math.abs(ev.year) + ' BCE' : ev.year + ' CE'}`}
+        >
+          <!-- Year column -->
+          <div class="otd-ev-year-col">
+            <div class="otd-ev-year-badge text-mono">
+              {ev.year < 0 ? `${Math.abs(ev.year)} BCE` : `${ev.year} CE`}
+            </div>
+            <div class="otd-ev-type-icon" aria-label={ev.type}>{typeIcons[ev.type] ?? '•'}</div>
+          </div>
+
+          <!-- Connector -->
+          <div class="otd-ev-connector" aria-hidden="true">
+            <div class="otd-ev-dot"></div>
+            <div class="otd-ev-line"></div>
+          </div>
+
+          <!-- Content -->
+          <a href={ev.link} class="otd-ev-content">
+            <div class="otd-ev-header">
+              <h2 class="otd-ev-title text-display-sm">{ev.title}</h2>
+              <div class="otd-ev-meta">
+                <span class="otd-ev-type-badge text-mono">{ev.type}</span>
+                <span class="otd-ev-era-badge text-mono" style={`color: var(--era-c)`}>{ev.era}</span>
+              </div>
+            </div>
+            <p class="otd-ev-desc text-body-md">{ev.description}</p>
+            <div class="otd-ev-tags">
+              {ev.tags.map(t => <span class="otd-ev-tag text-mono">{t}</span>)}
+            </div>
+            <div class="otd-ev-link-hint text-body-sm">
+              Read more
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <!-- CTA -->
+    <div class="container-content otd-cta section-sm">
+      <a href="/timeline" class="btn btn-primary otd-cta-btn">Explore the Full Timeline →</a>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .otd-page-hero {
+    position: relative;
+    padding: var(--space-5xl) 0 var(--space-4xl);
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+    text-align: center;
+  }
+  .otd-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .otd-hero-heading {
+    font-size: clamp(32px, 5vw, 56px);
+    letter-spacing: -2.5px;
+    line-height: 1;
+  }
+  .otd-hero-sub { color: var(--color-body); max-width: 480px; }
+  .otd-date-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 11px;
+    color: var(--color-mute);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 4px var(--space-sm);
+  }
+
+  /* Filters */
+  .otd-filter-bar {
+    position: sticky;
+    top: var(--nav-height);
+    z-index: 50;
+    background: rgba(10,10,10,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-sm) 0;
+  }
+  .otd-filters-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .otd-type-filters { display: flex; gap: 4px; flex-wrap: wrap; }
+  .otd-type-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+    padding: 0 var(--space-sm);
+    font-size: 11px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    color: var(--color-body);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    transition: var(--transition-fast);
+  }
+  .otd-type-btn:hover { color: var(--color-ink); border-color: var(--color-border-strong); }
+  .otd-type-btn.active {
+    background: var(--color-bg-hover);
+    color: var(--color-ink);
+    border-color: var(--color-border-strong);
+  }
+  .otd-type-icon { font-size: 11px; }
+
+  /* Events list */
+  .otd-events-list {
+    padding-block: var(--space-3xl);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .otd-event-full {
+    display: grid;
+    grid-template-columns: 96px 32px 1fr;
+    gap: var(--space-md);
+    padding-bottom: var(--space-xl);
+  }
+  .otd-event-full.hidden { display: none; }
+
+  .otd-ev-year-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-xs);
+    padding-top: 4px;
+  }
+  .otd-ev-year-badge {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ev-c, var(--color-link));
+    background: color-mix(in srgb, var(--ev-c, var(--color-link)) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ev-c, var(--color-link)) 25%, transparent);
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .otd-ev-type-icon { font-size: 14px; }
+
+  /* Connector */
+  .otd-ev-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .otd-ev-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    background: var(--ev-c, var(--color-link));
+    box-shadow: 0 0 8px var(--ev-c, var(--color-link));
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .otd-ev-line {
+    flex: 1;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--ev-c, var(--color-border)), var(--color-border));
+    opacity: 0.4;
+    margin-top: 4px;
+  }
+
+  /* Content */
+  .otd-ev-content {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-1);
+    border-left: 3px solid var(--ev-c, var(--color-border));
+  }
+  .otd-ev-content:hover {
+    box-shadow: var(--shadow-3);
+    border-color: var(--ev-c, var(--color-border-strong));
+    transform: translateX(4px);
+  }
+  .otd-ev-content:hover .otd-ev-link-hint { color: var(--color-link); }
+
+  .otd-ev-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+  .otd-ev-title { font-size: 20px; font-weight: 600; letter-spacing: -0.5px; line-height: 1.2; }
+  .otd-ev-meta { display: flex; gap: 4px; flex-shrink: 0; }
+  .otd-ev-type-badge, .otd-ev-era-badge {
+    font-size: 9px;
+    border-radius: var(--radius-full);
+    padding: 2px 7px;
+    border: 1px solid var(--color-border);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .otd-ev-type-badge { color: var(--ev-c); background: color-mix(in srgb, var(--ev-c) 10%, transparent); border-color: color-mix(in srgb, var(--ev-c) 25%, transparent); }
+  .otd-ev-era-badge { background: var(--color-bg-hover); }
+
+  .otd-ev-desc { color: var(--color-body); line-height: 1.7; font-size: 15px; }
+  .otd-ev-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+  .otd-ev-tag {
+    font-size: 10px; color: var(--color-mute);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 2px 7px;
+  }
+  .otd-ev-link-hint {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--color-mute);
+    font-size: 13px;
+    transition: color var(--transition-fast);
+    width: fit-content;
+  }
+
+  /* CTA */
+  .otd-cta { display: flex; justify-content: center; }
+  .otd-cta-btn { height: 48px; padding: 0 var(--space-xl); border-radius: var(--radius-pill); font-size: var(--text-body-md); }
+
+  @media (max-width: 767px) {
+    .otd-event-full { grid-template-columns: 72px 24px 1fr; }
+    .otd-ev-header { flex-direction: column; }
+  }
+  @media (max-width: 599px) {
+    .otd-event-full { grid-template-columns: 60px 20px 1fr; }
+    .otd-ev-meta { display: none; }
+  }
+</style>
+
+<script>
+  const typeBtns = document.querySelectorAll('.otd-type-btn');
+  const events = document.querySelectorAll('.otd-event-full');
+  const countEl = document.getElementById('otd-count');
+
+  typeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      typeBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+
+      const type = (btn as HTMLElement).dataset.type ?? 'all';
+      let count = 0;
+      events.forEach(ev => {
+        const evType = (ev as HTMLElement).dataset.type ?? '';
+        if (type === 'all' || evType === type) {
+          ev.classList.remove('hidden');
+          count++;
+        } else {
+          ev.classList.add('hidden');
+        }
+      });
+      if (countEl) countEl.textContent = `${count} event${count !== 1 ? 's' : ''}`;
+    });
+  });
+</script>

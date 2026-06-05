@@ -1,0 +1,173 @@
+---
+// MiniMap — bottom strip showing full timeline with current viewport
+---
+
+<div class="minimap-bar" aria-label="Timeline overview" role="navigation">
+  <div class="minimap-inner">
+    <!-- Era segments (populated dynamically) -->
+    <div class="minimap-eras" id="minimap-eras" aria-hidden="true"></div>
+
+    <!-- Viewport indicator -->
+    <div class="minimap-viewport" id="minimap-viewport" aria-hidden="true"></div>
+
+    <!-- Today marker -->
+    <div class="minimap-today" id="minimap-today" aria-hidden="true" title="Today" style="left: 100%; display: none;">
+      <div class="today-dot"></div>
+    </div>
+  </div>
+
+  <div class="minimap-labels" aria-hidden="true"></div>
+</div>
+
+<style>
+  .minimap-bar {
+    height: 48px;
+    background: var(--color-bg-soft);
+    border-top: 1px solid var(--color-border);
+    padding: 6px var(--space-md) 2px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .minimap-inner {
+    position: relative;
+    height: 20px;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .minimap-eras {
+    display: flex;
+    height: 100%;
+    width: 100%;
+  }
+  .mm-era {
+    height: 100%;
+    background: var(--c, var(--color-mute));
+    opacity: 0.25;
+    transition: opacity var(--transition-fast);
+    border-right: 1px solid rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+  .mm-era:hover { opacity: 0.45; }
+
+  .minimap-viewport {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 2px;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    transition: left 0.1s ease, width 0.1s ease;
+  }
+
+  .minimap-today {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+  .today-dot {
+    width: 2px;
+    height: 100%;
+    background: var(--color-era-present);
+    box-shadow: 0 0 4px var(--color-era-present);
+  }
+
+  .minimap-labels {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 2px;
+  }
+  .mm-label {
+    font-size: 9px;
+    color: var(--color-mute);
+    white-space: nowrap;
+  }
+</style>
+
+<script>
+  // Update minimap viewport based on zoom transform
+  const viewport = document.getElementById('minimap-viewport');
+  const minimapInner = document.querySelector('.minimap-inner');
+  const minimapEras = document.getElementById('minimap-eras');
+  const minimapLabels = document.querySelector('.minimap-labels');
+  const minimapToday = document.getElementById('minimap-today');
+
+  // Listen to D3 zoom events via custom event (receives normalized coordinates in [0, 1])
+  document.addEventListener('timeline:zoom', ((e: CustomEvent) => {
+    const { xStart, xEnd } = e.detail;
+    if (!viewport) return;
+
+    const leftPct = Math.max(0, xStart) * 100;
+    const widthPct = Math.min(100, (xEnd - xStart)) * 100;
+
+    viewport.style.left = `${leftPct}%`;
+    viewport.style.width = `${widthPct}%`;
+  }) as EventListener);
+
+  // Click on minimap to jump (sends percentage parameter to canvas)
+  minimapInner?.addEventListener('click', (e) => {
+    const rect = minimapInner.getBoundingClientRect();
+    const clickX = (e as MouseEvent).clientX - rect.left;
+    const pct = clickX / rect.width;
+    
+    document.dispatchEvent(new CustomEvent('timeline:minimap-click', {
+      detail: { pct }
+    }));
+  });
+
+  // Listen for scope changes to dynamically update background era bands & labels
+  document.addEventListener('timeline:scope-updated', ((e: CustomEvent) => {
+    const { scope, eras } = e.detail;
+    if (!minimapEras) return;
+
+    // 1. Redraw era blocks
+    minimapEras.innerHTML = '';
+    eras.forEach((era: any) => {
+      const el = document.createElement('div');
+      el.className = 'mm-era';
+      el.style.width = `${era.widthPct}%`;
+      el.style.setProperty('--c', era.color);
+      el.title = era.name;
+      minimapEras.appendChild(el);
+    });
+
+    // 2. Redraw a subset of labels to prevent crowding
+    if (minimapLabels) {
+      minimapLabels.innerHTML = '';
+      // We will select a subset of labels: e.g. up to 5 evenly spaced labels
+      const step = Math.max(1, Math.floor(eras.length / 4));
+      const labelEras = eras.filter((_: any, idx: number) => {
+        return idx === 0 || idx === eras.length - 1 || idx % step === 0;
+      });
+
+      // Keep only unique ones in order
+      const uniqueLabels = Array.from(new Set(labelEras.map((era: any) => era.name)));
+
+      uniqueLabels.forEach((name: any) => {
+        const span = document.createElement('span');
+        span.className = 'mm-label text-mono';
+        span.textContent = name;
+        minimapLabels.appendChild(span);
+      });
+    }
+
+    // 3. Today marker visibility (Always at far right since all scopes end at present 2026)
+    if (minimapToday) {
+      minimapToday.style.display = 'flex';
+      minimapToday.style.left = '100%';
+    }
+  }) as EventListener);
+</script>

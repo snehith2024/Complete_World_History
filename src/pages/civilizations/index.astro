@@ -1,0 +1,333 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import civs from '../../data/civilizations.json';
+
+const eras = ['All', 'ancient', 'classical', 'medieval', 'early-modern', 'industrial', 'modern'];
+const regions = ['All', 'Africa', 'Asia', 'Europe', 'Middle East', 'South Asia', 'East Asia', 'Central America', 'South America', 'Global'];
+---
+
+<Layout
+  title="Civilizations"
+  description="Explore 127+ major civilizations from Mesopotamia to the modern world. Browse timelines, maps, key figures, and interconnected histories."
+>
+  <div class="civs-page" style="padding-top: var(--nav-height);">
+    <!-- Page header -->
+    <div class="civs-hero">
+      <div class="mesh-gradient" aria-hidden="true"></div>
+      <div class="container-content civs-hero-inner">
+        <p class="eyebrow">Civilization Explorer</p>
+        <h1 class="text-display-xl civs-heading">
+          127+ civilizations.<br/>
+          <span class="gradient-text-develop">All of human history.</span>
+        </h1>
+        <p class="text-body-lg civs-sub">
+          From Mesopotamia to the British Empire — explore the complete story of human civilization.
+        </p>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="civs-filters-bar glass" role="group" aria-label="Filter civilizations">
+      <div class="container">
+        <div class="civs-filters-inner">
+          <div class="filter-group">
+            <label class="filter-label eyebrow" for="era-filter">Era</label>
+            <select class="filter-select" id="era-filter" aria-label="Filter by era">
+              {eras.map(e => <option value={e.toLowerCase()}>{e.charAt(0).toUpperCase() + e.slice(1)}</option>)}
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label eyebrow" for="region-filter">Region</label>
+            <select class="filter-select" id="region-filter" aria-label="Filter by region">
+              {regions.map(r => <option value={r.toLowerCase()}>{r}</option>)}
+            </select>
+          </div>
+          <div class="filter-search">
+            <input
+              type="search"
+              id="civ-search"
+              class="filter-search-input"
+              placeholder="Search civilizations..."
+              aria-label="Search civilizations"
+            />
+          </div>
+          <div class="filter-count text-mono" id="civ-count" aria-live="polite">
+            {civs.length} civilizations
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="container civs-content section">
+      <div class="civs-grid" id="civs-grid">
+        {civs.map((civ, i) => (
+          <a
+            href={`/civilizations/${civ.id}`}
+            class="civ-full-card animate-fade-in-up"
+            data-era={civ.era}
+            data-region={civ.region.toLowerCase()}
+            data-name={civ.name.toLowerCase()}
+            style={`animation-delay: ${i * 50}ms; --civ-c: ${civ.color}`}
+            aria-label={civ.name}
+          >
+            <!-- Color accent bar -->
+            <div class="civ-fc-bar"></div>
+
+            <div class="civ-fc-body">
+              <!-- Top meta -->
+              <div class="civ-fc-meta">
+                <span class="civ-fc-region text-mono">{civ.region}</span>
+                <span class="civ-fc-events text-mono">{civ.eventCount} events</span>
+              </div>
+
+              <!-- Name -->
+              <h2 class="civ-fc-name text-display-sm">{civ.name}</h2>
+
+              <!-- Dates -->
+              <p class="civ-fc-dates text-mono">
+                {civ.start < 0 ? `${Math.abs(civ.start).toLocaleString()} BCE` : `${civ.start} CE`}
+                {' – '}
+                {civ.end < 0 ? `${Math.abs(civ.end).toLocaleString()} BCE` : `${civ.end} CE`}
+              </p>
+
+              <!-- Description -->
+              <p class="civ-fc-desc text-body-sm">{civ.description}</p>
+
+              <!-- Key facts -->
+              <div class="civ-fc-facts">
+                {civ.keyFacts.map(f => (
+                  <span class="civ-fc-fact">{f}</span>
+                ))}
+              </div>
+
+              <!-- Explore link -->
+              <div class="civ-fc-link" style={`color: var(--civ-c)`}>
+                Explore civilization →
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Hero */
+  .civs-hero {
+    position: relative;
+    padding: var(--space-5xl) 0 var(--space-4xl);
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+    text-align: center;
+  }
+  .civs-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .civs-heading {
+    font-size: clamp(32px, 5vw, 56px);
+    letter-spacing: -2.5px;
+    line-height: 1;
+    max-width: 700px;
+  }
+  .civs-sub { color: var(--color-body); max-width: 480px; }
+
+  /* Filters */
+  .civs-filters-bar {
+    position: sticky;
+    top: var(--nav-height);
+    z-index: 50;
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-sm) 0;
+  }
+  .civs-filters-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  .filter-label { color: var(--color-mute); font-size: 10px; }
+  .filter-select {
+    height: 32px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-xs);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-ink);
+    outline: none;
+    cursor: pointer;
+  }
+  .filter-select:focus { border-color: var(--color-border-focus); }
+  .filter-search { flex: 1; max-width: 280px; }
+  .filter-search-input {
+    width: 100%;
+    height: 32px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-ink);
+    outline: none;
+  }
+  .filter-search-input::placeholder { color: var(--color-mute); }
+  .filter-search-input:focus { border-color: var(--color-border-focus); }
+  .filter-count { font-size: 11px; color: var(--color-mute); margin-left: auto; }
+
+  /* Grid */
+  .civs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .civ-full-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-2);
+  }
+  .civ-full-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-3);
+    border-color: var(--civ-c, var(--color-border-strong));
+  }
+  .civ-full-card.hidden { display: none; }
+
+  .civ-fc-bar {
+    height: 3px;
+    background: var(--civ-c);
+    opacity: 0.7;
+    transition: height var(--transition-normal);
+  }
+  .civ-full-card:hover .civ-fc-bar { height: 5px; opacity: 1; }
+
+  .civ-fc-body {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    flex: 1;
+  }
+  .civ-fc-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .civ-fc-region {
+    font-size: 10px;
+    color: var(--civ-c);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .civ-fc-events {
+    font-size: 10px;
+    color: var(--color-mute);
+  }
+  .civ-fc-name {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    margin-top: 4px;
+  }
+  .civ-fc-dates {
+    font-size: 10px;
+    color: var(--color-mute);
+  }
+  .civ-fc-desc {
+    color: var(--color-body);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-top: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .civ-fc-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .civ-fc-fact {
+    font-size: 10px;
+    color: var(--color-mute);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 2px 7px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 180px;
+  }
+  .civ-fc-link {
+    margin-top: auto;
+    padding-top: var(--space-sm);
+    font-size: 13px;
+    font-weight: 500;
+    transition: gap var(--transition-fast);
+  }
+
+  @media (max-width: 959px) { .civs-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 599px) { .civs-grid { grid-template-columns: 1fr; } .filter-search { max-width: 100%; } }
+</style>
+
+<script>
+  const eraFilter = document.getElementById('era-filter') as HTMLSelectElement;
+  const regionFilter = document.getElementById('region-filter') as HTMLSelectElement;
+  const searchInput = document.getElementById('civ-search') as HTMLInputElement;
+  const countEl = document.getElementById('civ-count');
+  const cards = document.querySelectorAll('.civ-full-card');
+
+  function filterCivs() {
+    const era = eraFilter.value;
+    const region = regionFilter.value;
+    const q = searchInput.value.toLowerCase();
+    let count = 0;
+
+    cards.forEach(card => {
+      const cardEra = (card as HTMLElement).dataset.era ?? '';
+      const cardRegion = ((card as HTMLElement).dataset.region ?? '').toLowerCase();
+      const cardName = ((card as HTMLElement).dataset.name ?? '').toLowerCase();
+
+      const eraMatch = era === 'all' || cardEra === era;
+      const regionMatch = region === 'all' || cardRegion.includes(region);
+      const searchMatch = !q || cardName.includes(q);
+
+      if (eraMatch && regionMatch && searchMatch) {
+        card.classList.remove('hidden');
+        count++;
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+
+    if (countEl) countEl.textContent = `${count} civilization${count !== 1 ? 's' : ''}`;
+  }
+
+  eraFilter?.addEventListener('change', filterCivs);
+  regionFilter?.addEventListener('change', filterCivs);
+  searchInput?.addEventListener('input', filterCivs);
+</script>

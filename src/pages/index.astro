@@ -1,0 +1,96 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/home/Hero.astro';
+import EraGrid from '../components/home/EraGrid.astro';
+import FeatureShowcase from '../components/home/FeatureShowcase.astro';
+import OnThisDayPreview from '../components/home/OnThisDayPreview.astro';
+import SearchBar from '../components/home/SearchBar.astro';
+import CivRow from '../components/home/CivRow.astro';
+---
+
+<Layout
+  title="Complete World History"
+  description="Explore 13.8 billion years of human and cosmic history. An infinitely zoomable interactive timeline of civilizations, events, maps, and historical figures."
+>
+  <Hero />
+  <SearchBar />
+  <OnThisDayPreview />
+  <EraGrid />
+  <FeatureShowcase />
+  <CivRow />
+
+  <!-- CTA Band -->
+  <section class="cta-band">
+    <div class="mesh-gradient" aria-hidden="true"></div>
+    <div class="container-content cta-inner">
+      <p class="eyebrow">Start Exploring</p>
+      <h2 class="text-display-lg cta-heading">
+        13.8 billion years of history.<br/>
+        <span class="gradient-text-develop">Infinitely explorable.</span>
+      </h2>
+      <p class="text-body-lg cta-body">
+        Zoom from the Big Bang to yesterday. Explore parallel civilizations. Discover the connections that shaped our world.
+      </p>
+      <div class="cta-actions">
+        <a href="/timeline" class="btn btn-primary cta-btn-primary">
+          Open the Timeline
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8h10M10 5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="/civilizations" class="btn btn-secondary cta-btn-secondary">Browse Civilizations</a>
+        <a href="/knowledge-graph" class="btn btn-secondary cta-btn-secondary">Knowledge Graph</a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .cta-band {
+    position: relative;
+    padding-block: var(--space-section);
+    background: var(--color-bg);
+    overflow: hidden;
+    text-align: center;
+  }
+  .cta-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+  .cta-heading {
+    max-width: 600px;
+    line-height: 1.1;
+  }
+  .cta-body {
+    color: var(--color-body);
+    max-width: 500px;
+  }
+  .cta-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cta-btn-primary {
+    height: 48px;
+    padding: 0 var(--space-lg);
+    font-size: var(--text-body-md);
+    border-radius: var(--radius-pill);
+    gap: var(--space-xs);
+  }
+  .cta-btn-secondary {
+    height: 48px;
+    padding: 0 var(--space-lg);
+    font-size: var(--text-body-md);
+    border-radius: var(--radius-pill);
+  }
+  @media (max-width: 599px) {
+    .cta-actions { flex-direction: column; width: 100%; }
+    .cta-btn-primary, .cta-btn-secondary { width: 100%; justify-content: center; }
+  }
+</style>

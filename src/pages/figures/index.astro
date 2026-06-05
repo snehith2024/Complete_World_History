@@ -1,0 +1,223 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import figures from '../../data/figures.json';
+---
+
+<Layout
+  title="Historical Figures"
+  description="Explore history's most influential people — from Julius Caesar to Mahatma Gandhi. Discover their lives, key events, and connections across time."
+>
+  <div class="figures-page" style="padding-top: var(--nav-height)">
+    <div class="figures-hero">
+      <div class="mesh-gradient" aria-hidden="true"></div>
+      <div class="container-content figures-hero-inner">
+        <p class="eyebrow">Historical Figures</p>
+        <h1 class="text-display-xl figures-heading">
+          The people who<br/>
+          <span class="gradient-text-preview">shaped history.</span>
+        </h1>
+        <p class="text-body-lg figures-sub">
+          Leaders, philosophers, scientists, artists, warriors, and visionaries who changed the world.
+        </p>
+      </div>
+    </div>
+
+    <div class="container figures-content section">
+      <!-- Search -->
+      <div class="figures-search-bar">
+        <input
+          type="search"
+          id="figures-search"
+          class="filter-search-input"
+          placeholder="Search figures..."
+          aria-label="Search historical figures"
+        />
+        <span class="filter-count text-mono" id="figures-count" aria-live="polite">
+          {figures.length} figures
+        </span>
+      </div>
+
+      <div class="figures-grid" id="figures-grid">
+        {figures.map((fig, i) => (
+          <a
+            href={`/figures/${fig.id}`}
+            class="figure-card animate-fade-in-up"
+            data-name={fig.name.toLowerCase()}
+            data-era={fig.era}
+            style={`animation-delay: ${i * 60}ms`}
+            aria-label={fig.name}
+          >
+            <!-- Avatar -->
+            <div class="fc-avatar" aria-hidden="true">
+              {fig.name.split(' ').map(w => w.charAt(0)).join('').slice(0, 2)}
+            </div>
+
+            <div class="fc-info">
+              <h2 class="fc-name text-display-sm">{fig.name}</h2>
+              <p class="fc-role text-mono">{fig.role}</p>
+              <p class="fc-dates text-mono">
+                {fig.born < 0 ? `${Math.abs(fig.born)} BCE` : `${fig.born} CE`}
+                {' – '}
+                {fig.died < 0 ? `${Math.abs(fig.died)} BCE` : `${fig.died} CE`}
+              </p>
+              <p class="fc-significance text-body-sm">{fig.significance}</p>
+            </div>
+
+            <div class="fc-tags">
+              {fig.tags.slice(0, 3).map(t => (
+                <span class="fc-tag text-mono">{t}</span>
+              ))}
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .figures-hero {
+    position: relative;
+    padding: var(--space-5xl) 0 var(--space-4xl);
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+    text-align: center;
+  }
+  .figures-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .figures-heading {
+    font-size: clamp(32px, 5vw, 56px);
+    letter-spacing: -2.5px;
+    line-height: 1;
+  }
+  .figures-sub { color: var(--color-body); max-width: 480px; }
+
+  .figures-content { display: flex; flex-direction: column; gap: var(--space-xl); }
+
+  .figures-search-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .filter-search-input {
+    flex: 1;
+    max-width: 320px;
+    height: 36px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-ink);
+    outline: none;
+  }
+  .filter-search-input::placeholder { color: var(--color-mute); }
+  .filter-search-input:focus { border-color: var(--color-border-focus); }
+  .filter-count { font-size: 11px; color: var(--color-mute); }
+
+  .figures-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+
+  .figure-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-1);
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+  .figure-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-3);
+    border-color: var(--color-border-strong);
+  }
+  .figure-card.hidden { display: none; }
+
+  .fc-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-md);
+    background: var(--gradient-preview);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .fc-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .fc-name { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+  .fc-role { font-size: 10px; color: var(--color-link); text-transform: uppercase; letter-spacing: 0.04em; }
+  .fc-dates { font-size: 10px; color: var(--color-mute); }
+  .fc-significance {
+    color: var(--color-body);
+    font-size: 12px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+
+  .fc-tags {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    align-items: flex-end;
+    flex-shrink: 0;
+  }
+  .fc-tag {
+    font-size: 9px;
+    color: var(--color-mute);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 959px) { .figures-grid { grid-template-columns: 1fr; } }
+</style>
+
+<script>
+  const search = document.getElementById('figures-search') as HTMLInputElement;
+  const countEl = document.getElementById('figures-count');
+  const cards = document.querySelectorAll('.figure-card');
+
+  search?.addEventListener('input', () => {
+    const q = search.value.toLowerCase();
+    let count = 0;
+    cards.forEach(card => {
+      const name = (card as HTMLElement).dataset.name ?? '';
+      if (!q || name.includes(q)) { card.classList.remove('hidden'); count++; }
+      else card.classList.add('hidden');
+    });
+    if (countEl) countEl.textContent = `${count} figure${count !== 1 ? 's' : ''}`;
+  });
+</script>

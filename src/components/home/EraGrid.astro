@@ -1,0 +1,214 @@
+---
+import eras from '../../data/eras.json';
+---
+
+<section class="era-grid-section section" aria-labelledby="era-grid-heading">
+  <div class="container">
+    <div class="section-header">
+      <p class="eyebrow">Navigate by era</p>
+      <h2 id="era-grid-heading" class="text-display-lg section-title">
+        13.8 billion years, <span class="gradient-text-develop">11 eras.</span>
+      </h2>
+      <p class="text-body-lg section-body">
+        Every epoch of existence — from cosmic origins to the present day.
+      </p>
+    </div>
+
+    <div class="era-grid stagger" role="list">
+      {eras.map((era, i) => (
+        <a
+          href={`/timeline#${era.id}`}
+          class="era-card animate-fade-in-up"
+          role="listitem"
+          style={`animation-delay: ${i * 60}ms`}
+          aria-label={`Explore ${era.name}: ${era.description}`}
+        >
+          <!-- Era color bar -->
+          <div class="era-card-bar" style={`background: ${era.color}`}></div>
+
+          <div class="era-card-content">
+            <!-- Icon + Meta -->
+            <div class="era-card-header">
+              <span class="era-icon" aria-hidden="true">{era.icon}</span>
+              <div class="era-card-meta">
+                <span class="era-card-count text-mono">
+                  {era.eventCount.toLocaleString()} events
+                </span>
+              </div>
+            </div>
+
+            <!-- Name & date -->
+            <div class="era-card-body">
+              <h3 class="era-card-name text-display-sm">{era.name}</h3>
+              <p class="era-card-dates text-mono">
+                {era.start < 0
+                  ? `${Math.abs(era.start).toLocaleString()} BCE`
+                  : `${era.start.toLocaleString()} CE`}
+                {' → '}
+                {era.end < 0
+                  ? `${Math.abs(era.end).toLocaleString()} BCE`
+                  : era.id === 'present'
+                    ? 'Today'
+                    : `${era.end.toLocaleString()} CE`}
+              </p>
+              <p class="era-card-desc text-body-sm">{era.description}</p>
+            </div>
+
+            <!-- Explore arrow -->
+            <div class="era-card-footer">
+              <span class="era-card-link text-body-sm" style={`color: ${era.color}`}>
+                Explore era
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                  <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .era-grid-section {
+    background: var(--color-bg-soft);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .section-header {
+    text-align: center;
+    margin-bottom: var(--space-3xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .section-title {
+    max-width: 600px;
+  }
+  .section-body {
+    color: var(--color-body);
+    max-width: 480px;
+  }
+
+  .era-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-md);
+  }
+
+  .era-card {
+    position: relative;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-2);
+  }
+  .era-card:hover {
+    box-shadow: var(--shadow-3);
+    border-color: var(--color-border-strong);
+    transform: translateY(-3px);
+  }
+  .era-card:hover .era-card-bar {
+    height: 4px;
+    opacity: 1;
+  }
+
+  .era-card-bar {
+    width: 100%;
+    height: 3px;
+    opacity: 0.7;
+    transition: height var(--transition-normal), opacity var(--transition-normal);
+    flex-shrink: 0;
+  }
+
+  .era-card-content {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--space-sm);
+  }
+
+  .era-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+  .era-icon {
+    font-size: 20px;
+    line-height: 1;
+  }
+  .era-card-count {
+    font-size: 10px;
+    color: var(--color-mute);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+
+  .era-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .era-card-name {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+  .era-card-dates {
+    font-size: 10px;
+    color: var(--color-mute);
+  }
+  .era-card-desc {
+    color: var(--color-body);
+    font-size: 13px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .era-card-footer {
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-border);
+  }
+  .era-card-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: gap var(--transition-fast);
+  }
+  .era-card:hover .era-card-link {
+    gap: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1199px) {
+    .era-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 959px) {
+    .era-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 499px) {
+    .era-grid { grid-template-columns: 1fr; }
+  }
+</style>

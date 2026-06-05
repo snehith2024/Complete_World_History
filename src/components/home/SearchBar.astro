@@ -1,0 +1,201 @@
+---
+// Search bar component for homepage
+const exampleQueries = [
+  "What happened in 500 BCE?",
+  "Show all Roman Empire events",
+  "Wars between 1000 and 1500 CE",
+  "Ashoka's reign events",
+  "Rise of Islamic Caliphate",
+  "Ancient India vs Ancient Greece",
+];
+---
+
+<section class="search-section" aria-labelledby="search-heading">
+  <div class="container-content">
+    <div class="search-inner">
+      <div class="search-label-row">
+        <h2 id="search-heading" class="text-display-sm search-heading">
+          Ask anything about history
+        </h2>
+        <a href="/search" class="text-body-sm text-link search-link">Advanced search →</a>
+      </div>
+
+      <div class="search-form" role="search">
+        <div class="search-input-group">
+          <svg class="search-form-icon" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M13 13L17 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input
+            type="search"
+            id="homepage-search"
+            class="search-form-input"
+            placeholder="What happened in 500 BCE? Show all Roman Empire events..."
+            autocomplete="off"
+            aria-label="Search world history"
+          />
+          <button class="search-submit-btn btn btn-primary" id="search-submit-btn" aria-label="Search">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 7h10M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Search
+          </button>
+        </div>
+      </div>
+
+      <!-- Example queries -->
+      <div class="search-examples" aria-label="Example searches">
+        <span class="eyebrow search-examples-label">Try:</span>
+        <div class="search-example-list">
+          {exampleQueries.map(q => (
+            <button class="search-example-btn" data-query={q} aria-label={`Search for: ${q}`}>
+              {q}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .search-section {
+    padding-block: var(--space-2xl);
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .search-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .search-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+  .search-heading {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.4px;
+  }
+  .search-link {
+    font-size: var(--text-body-sm);
+    color: var(--color-link);
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .search-link:hover { color: var(--color-link-hover); }
+
+  .search-form { width: 100%; }
+
+  .search-input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-sm);
+    height: 52px;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .search-input-group:focus-within {
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
+  }
+
+  .search-form-icon {
+    color: var(--color-mute);
+    flex-shrink: 0;
+  }
+  .search-form-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    color: var(--color-ink);
+    min-width: 0;
+  }
+  .search-form-input::placeholder { color: var(--color-mute); }
+
+  .search-submit-btn {
+    height: 36px;
+    padding: 0 var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-body-sm);
+    gap: var(--space-xs);
+    flex-shrink: 0;
+  }
+
+  /* Examples */
+  .search-examples {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+  .search-examples-label {
+    flex-shrink: 0;
+    color: var(--color-mute);
+  }
+  .search-example-list {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+  .search-example-btn {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--color-body);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 3px var(--space-xs);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    white-space: nowrap;
+  }
+  .search-example-btn:hover {
+    background: var(--color-bg-card-2);
+    color: var(--color-ink);
+    border-color: var(--color-border-strong);
+  }
+
+  @media (max-width: 599px) {
+    .search-label-row { flex-direction: column; align-items: flex-start; }
+    .search-submit-btn span { display: none; }
+  }
+</style>
+
+<script>
+  const input = document.getElementById('homepage-search') as HTMLInputElement;
+  const submitBtn = document.getElementById('search-submit-btn');
+
+  function doSearch() {
+    const q = input?.value.trim();
+    if (q) window.location.href = `/search?q=${encodeURIComponent(q)}`;
+  }
+
+  submitBtn?.addEventListener('click', doSearch);
+  input?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doSearch();
+  });
+
+  // Fill input from example chips
+  document.querySelectorAll('.search-example-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = (btn as HTMLElement).dataset.query ?? '';
+      if (input) {
+        input.value = q;
+        input.focus();
+      }
+    });
+  });
+</script>

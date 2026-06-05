@@ -1,0 +1,475 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import civs from '../../data/civilizations.json';
+---
+
+<Layout
+  title="Compare Civilizations"
+  description="Compare two or more civilizations side by side. Discover what was happening simultaneously across Rome, China, Egypt, Greece and more."
+>
+  <div class="compare-page" id="compare-page-wrapper" data-civs={JSON.stringify(civs)} style="padding-top: var(--nav-height)">
+    <!-- Header -->
+    <div class="compare-hero">
+      <div class="mesh-gradient" aria-hidden="true"></div>
+      <div class="container-content compare-hero-inner">
+        <p class="eyebrow">Comparison Mode</p>
+        <h1 class="text-display-xl compare-heading">
+          History, <span class="gradient-text-ship">side by side.</span>
+        </h1>
+        <p class="text-body-lg compare-sub">
+          Select two civilizations and see what was happening simultaneously across the ancient world.
+        </p>
+      </div>
+    </div>
+
+    <!-- Selector -->
+    <div class="container-content compare-selector section-sm">
+      <div class="compare-pickers">
+        <!-- Left picker -->
+        <div class="compare-picker" id="picker-a">
+          <label class="compare-picker-label eyebrow" for="civ-a-select">Civilization A</label>
+          <select class="compare-select" id="civ-a-select" aria-label="Select first civilization to compare">
+            <option value="">Select a civilization...</option>
+            {civs.map(c => (
+              <option value={c.id} selected={c.id === 'rome'}>{c.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div class="compare-vs" aria-label="versus">
+          <span class="compare-vs-text text-display-sm">VS</span>
+        </div>
+
+        <!-- Right picker -->
+        <div class="compare-picker" id="picker-b">
+          <label class="compare-picker-label eyebrow" for="civ-b-select">Civilization B</label>
+          <select class="compare-select" id="civ-b-select" aria-label="Select second civilization to compare">
+            <option value="">Select a civilization...</option>
+            {civs.map(c => (
+              <option value={c.id} selected={c.id === 'china'}>{c.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary compare-go-btn" id="compare-go-btn" aria-label="Compare selected civilizations">
+        Compare Now
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M2 7h10M8 4l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Results panel -->
+    <div class="container compare-results" id="compare-results" aria-live="polite">
+      <!-- Will be populated by JS -->
+      <div class="compare-placeholder">
+        <p class="text-body-lg text-body text-center">
+          Select two civilizations above to see a side-by-side comparison.
+        </p>
+        <div class="compare-suggestions">
+          <p class="eyebrow text-center">Popular comparisons</p>
+          <div class="comparison-chips">
+            <button class="comparison-chip" data-a="rome" data-b="china">Rome vs Han China</button>
+            <button class="comparison-chip" data-a="egypt" data-b="greece">Egypt vs Greece</button>
+            <button class="comparison-chip" data-a="greece" data-b="mesopotamia">Greece vs Mesopotamia</button>
+            <button class="comparison-chip" data-a="mongols" data-b="ottoman">Mongols vs Ottomans</button>
+            <button class="comparison-chip" data-a="maya" data-b="inca">Maya vs Inca</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .compare-hero {
+    position: relative;
+    padding: var(--space-5xl) 0 var(--space-4xl);
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+    text-align: center;
+  }
+  .compare-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .compare-heading {
+    font-size: clamp(32px, 5vw, 56px);
+    letter-spacing: -2.5px;
+    line-height: 1;
+  }
+  .compare-sub { color: var(--color-body); max-width: 480px; }
+
+  .compare-selector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+
+  .compare-pickers {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    width: 100%;
+    max-width: 720px;
+  }
+  .compare-picker {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .compare-picker-label { color: var(--color-mute); }
+  .compare-select {
+    width: 100%;
+    height: 48px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0 var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    color: var(--color-ink);
+    outline: none;
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .compare-select:focus { border-color: var(--color-border-focus); }
+
+  .compare-vs {
+    flex-shrink: 0;
+    padding-top: 24px;
+  }
+  .compare-vs-text {
+    font-size: 20px;
+    color: var(--color-mute);
+    background: linear-gradient(135deg, #ff4d4d, #7928ca);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+  }
+
+  .compare-go-btn {
+    height: 48px;
+    padding: 0 var(--space-xl);
+    font-size: var(--text-body-md);
+    border-radius: var(--radius-pill);
+    gap: var(--space-xs);
+  }
+
+  /* Results */
+  .compare-results { padding-bottom: var(--space-5xl); }
+  .compare-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xl);
+    padding-block: var(--space-3xl);
+  }
+  .compare-suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    align-items: center;
+  }
+  .comparison-chips {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .comparison-chip {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    color: var(--color-body);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: var(--space-xs) var(--space-md);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .comparison-chip:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-ink);
+    border-color: var(--color-border-strong);
+  }
+
+  /* Compare columns */
+  .compare-columns {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: var(--space-xl);
+    padding-top: var(--space-3xl);
+  }
+  .compare-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .compare-col-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    padding: var(--space-lg);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    border-top: 4px solid var(--civ-col-c, var(--color-border));
+  }
+  .compare-col-name { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+  .compare-col-dates { font-size: 11px; color: var(--color-mute); font-family: var(--font-mono); }
+  .compare-col-desc { color: var(--color-body); font-size: 13px; line-height: 1.6; }
+
+  .compare-divider-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: var(--space-4xl);
+  }
+  .compare-divider-line {
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--color-border), transparent);
+  }
+
+  .compare-details-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .compare-stat-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xxs);
+  }
+  .compare-stat-label { font-size: 10px; color: var(--color-mute); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.05em; }
+  .compare-stat-value { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; }
+  .compare-stat-bar-wrap { height: 5px; background: var(--color-bg-hover); border-radius: var(--radius-full); overflow: hidden; margin-top: var(--space-xxs); }
+  .compare-stat-bar { height: 100%; border-radius: var(--radius-full); transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
+
+  .compare-civ-link {
+    font-size: 10.5px;
+    border-radius: var(--radius-full);
+    padding: 2.5px 10px;
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    color: var(--color-link);
+    text-decoration: none;
+    transition: var(--transition-fast);
+  }
+  .compare-civ-link:hover {
+    background: rgba(0, 124, 240, 0.12);
+    border-color: rgba(0, 124, 240, 0.35);
+    color: var(--color-link-hover);
+  }
+
+  @media (max-width: 959px) {
+    .compare-pickers { flex-direction: column; }
+    .compare-vs { padding-top: 0; }
+    .compare-columns { grid-template-columns: 1fr; }
+    .compare-divider-col { display: none; }
+  }
+</style>
+
+<script>
+  const wrapper = document.getElementById('compare-page-wrapper');
+  const civs = JSON.parse(wrapper?.dataset.civs || '[]');
+
+  const civData: Record<string, any> = {};
+  civs.forEach((c: any) => civData[c.id] = c);
+
+  function runComparison(aId: string, bId: string) {
+    const a = civData[aId];
+    const b = civData[bId];
+    if (!a || !b) return;
+
+    const results = document.getElementById('compare-results');
+    if (!results) return;
+
+    const aSpan = Math.abs(a.end - a.start);
+    const bSpan = Math.abs(b.end - b.start);
+    const totalSpan = Math.max(aSpan, bSpan);
+    const aPct = Math.round(aSpan / totalSpan * 100);
+    const bPct = Math.round(bSpan / totalSpan * 100);
+
+    const overlapStart = Math.max(a.start, b.start);
+    const overlapEnd = Math.min(a.end, b.end);
+    const hasOverlap = overlapStart < overlapEnd;
+
+    // Formatter helpers
+    const formatFacts = (facts: string[]) => {
+      if (!facts || facts.length === 0) return '<li>No key facts recorded.</li>';
+      return facts.map(f => `<li>${f}</li>`).join('');
+    };
+
+    const formatFiguresLinks = (figs: string[]) => {
+      if (!figs || figs.length === 0) return '<span class="text-mute">None recorded</span>';
+      return figs.map(f => {
+        const name = f.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        return `<a href="/figures/${f}" class="compare-civ-link text-mono">${name}</a>`;
+      }).join(' ');
+    };
+
+    const formatRelatedCivs = (related: string[]) => {
+      if (!related || related.length === 0) return '<span class="text-mute">None recorded</span>';
+      return related.map(r => {
+        const name = r.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        return `<a href="/civilizations/${r}" class="compare-civ-link text-mono">${name}</a>`;
+      }).join(' ');
+    };
+
+    results.innerHTML = `
+      <div class="compare-columns">
+        <!-- Column A -->
+        <div class="compare-col">
+          <div class="compare-col-header" style="--civ-col-c: ${a.color}">
+            <div style="color: ${a.color}; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;">${a.region}</div>
+            <div class="compare-col-name">${a.name}</div>
+            <div class="compare-col-dates">${a.start < 0 ? Math.abs(a.start) + ' BCE' : a.start + ' CE'} – ${a.end < 0 ? Math.abs(a.end) + ' BCE' : a.end + ' CE'}</div>
+            <p class="compare-col-desc">${a.description}</p>
+          </div>
+          
+          <div class="compare-details-card card">
+            <div class="compare-stat-row">
+              <div class="compare-stat-label">Duration</div>
+              <div class="compare-stat-value" style="color: ${a.color}">${aSpan.toLocaleString()} years</div>
+              <div class="compare-stat-bar-wrap">
+                <div class="compare-stat-bar" style="width: ${aPct}%; background: ${a.color}"></div>
+              </div>
+            </div>
+            
+            <div class="compare-stat-row" style="margin-top: 8px;">
+              <div class="compare-stat-label">Capital City</div>
+              <div class="compare-stat-value" style="font-size: 14px; font-weight: 500;">${a.capital || 'N/A'}</div>
+            </div>
+
+            <div class="compare-stat-row" style="margin-top: 8px;">
+              <div class="compare-stat-label">Key Facts & Achievements</div>
+              <ul style="padding-left: var(--space-md); margin-top: var(--space-xxs); font-size: 13px; line-height: 1.6; display: flex; flex-direction: column; gap: 4px; list-style: disc; color: var(--color-body)">
+                ${formatFacts(a.keyFacts)}
+              </ul>
+            </div>
+
+            <div class="compare-stat-row" style="margin-top: 8px;">
+              <div class="compare-stat-label">Historical Figures</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-xxs);">
+                ${formatFiguresLinks(a.figures)}
+              </div>
+            </div>
+
+            <div class="compare-stat-row" style="margin-top: 8px;">
+              <div class="compare-stat-label">Related Civilizations</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-xxs);">
+                ${formatRelatedCivs(a.relatedCivs)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-divider-col">
+          <div class="compare-divider-line"></div>
+        </div>
+
+        <!-- Column B -->
+        <div class="compare-col">
+          <div class="compare-col-header" style="--civ-col-c: ${b.color}">
+            <div style="color: ${b.color}; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;">${b.region}</div>
+            <div class="compare-col-name">${b.name}</div>
+            <div class="compare-col-dates">${b.start < 0 ? Math.abs(b.start) + ' BCE' : b.start + ' CE'} – ${b.end < 0 ? Math.abs(b.end) + ' BCE' : b.end + ' CE'}</div>
+            <p class="compare-col-desc">${b.description}</p>
+          </div>
+          
+          <div class="compare-details-card card">
+            <div class="compare-stat-row">
+              <div class="compare-stat-label">Duration</div>
+              <div class="compare-stat-value" style="color: ${b.color}">${bSpan.toLocaleString()} years</div>
+              <div class="compare-stat-bar-wrap">
+                <div class="compare-stat-bar" style="width: ${bPct}%; background: ${b.color}"></div>
+              </div>
+            </div>
+
+            <div class="compare-stat-row" style="margin-top: 8px;">
+              <div class="compare-stat-label">Capital City</div>
+              <div class="compare-stat-value" style="font-size: 14px; font-weight: 500;">${b.capital || 'N/A'}</div>
+            </div>
+
+            <div class="compare-stat-row" style="margin-top: 8px;">
+              <div class="compare-stat-label">Key Facts & Achievements</div>
+              <ul style="padding-left: var(--space-md); margin-top: var(--space-xxs); font-size: 13px; line-height: 1.6; display: flex; flex-direction: column; gap: 4px; list-style: disc; color: var(--color-body)">
+                ${formatFacts(b.keyFacts)}
+              </ul>
+            </div>
+
+            <div class="compare-stat-row" style="margin-top: 8px;">
+              <div class="compare-stat-label">Historical Figures</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-xxs);">
+                ${formatFiguresLinks(b.figures)}
+              </div>
+            </div>
+
+            <div class="compare-stat-row" style="margin-top: 8px;">
+              <div class="compare-stat-label">Related Civilizations</div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: var(--space-xxs);">
+                ${formatRelatedCivs(b.relatedCivs)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      ${hasOverlap ? `
+        <div style="margin-top: var(--space-xl); padding: var(--space-md); background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-align: center;" class="animate-fade-in-up">
+          <p style="font-family: var(--font-mono); font-size: 10px; color: var(--color-mute); margin-bottom: var(--space-xs);">TEMPORAL OVERLAP</p>
+          <p style="font-size: 14px; color: var(--color-body);">
+            <strong style="color: var(--color-ink)">${a.name}</strong> and <strong style="color: var(--color-ink)">${b.name}</strong> coexisted from
+            <strong style="color: var(--color-link)">${overlapStart < 0 ? Math.abs(overlapStart) + ' BCE' : overlapStart + ' CE'}</strong>
+            to
+            <strong style="color: var(--color-link)">${overlapEnd < 0 ? Math.abs(overlapEnd) + ' BCE' : overlapEnd + ' CE'}</strong>
+            (${Math.abs(overlapEnd - overlapStart).toLocaleString()} years of parallel history).
+          </p>
+        </div>
+      ` : `
+        <div style="margin-top: var(--space-xl); padding: var(--space-md); background: var(--color-bg-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); text-align: center;" class="animate-fade-in-up">
+          <p style="font-size: 14px; color: var(--color-body);">These civilizations did not overlap in time.</p>
+        </div>
+      `}
+
+      <div style="display: flex; justify-content: center; gap: var(--space-md); margin-top: var(--space-xl);">
+        <a href="/timeline" class="btn btn-primary" style="height: 40px; padding: 0 var(--space-lg); border-radius: var(--radius-pill); font-size: 13px;">View in Timeline →</a>
+        <a href="/knowledge-graph" class="btn btn-secondary" style="height: 40px; padding: 0 var(--space-lg); border-radius: var(--radius-pill); font-size: 13px;">Knowledge Graph →</a>
+      </div>
+    `;
+  }
+
+  // Button triggers comparison
+  document.getElementById('compare-go-btn')?.addEventListener('click', () => {
+    const a = (document.getElementById('civ-a-select') as HTMLSelectElement).value;
+    const b = (document.getElementById('civ-b-select') as HTMLSelectElement).value;
+    if (a && b && a !== b) runComparison(a, b);
+  });
+
+  // Preset comparison chips
+  document.querySelectorAll('.comparison-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const a = (chip as HTMLElement).dataset.a ?? '';
+      const b = (chip as HTMLElement).dataset.b ?? '';
+      const selA = document.getElementById('civ-a-select') as HTMLSelectElement;
+      const selB = document.getElementById('civ-b-select') as HTMLSelectElement;
+      if (selA) selA.value = a;
+      if (selB) selB.value = b;
+      runComparison(a, b);
+    });
+  });
+
+  // Default initial comparison
+  runComparison('rome', 'china');
+</script>

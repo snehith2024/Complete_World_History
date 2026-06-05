@@ -1,0 +1,1539 @@
+---
+// Sacred Timeline — Loki-inspired Canvas Rendering Engine
+// A cinematic, branching timeline visualization
+import eras from '../../data/eras.json';
+import events from '../../data/events.json';
+---
+
+<div class="sacred-timeline" id="sacred-timeline"
+  data-events={JSON.stringify(events)}
+  data-eras={JSON.stringify(eras)}
+>
+  <canvas id="tl-canvas"></canvas>
+
+  <!-- Hover tooltip overlay -->
+  <div class="tl-tooltip" id="tl-tooltip">
+    <div class="tl-tooltip-header">
+      <span class="tl-tooltip-era" id="tt-era"></span>
+      <span class="tl-tooltip-year" id="tt-year"></span>
+    </div>
+    <h3 class="tl-tooltip-title" id="tt-title"></h3>
+    <p class="tl-tooltip-desc" id="tt-desc"></p>
+    <span class="tl-tooltip-hint">Click to explore →</span>
+  </div>
+
+  <!-- Selected event detail panel -->
+  <div class="tl-detail" id="tl-detail">
+    <button class="tl-detail-close" id="tl-detail-close" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <div class="tl-detail-header">
+      <span class="tl-detail-era" id="td-era"></span>
+      <span class="tl-detail-year" id="td-year"></span>
+    </div>
+    <h2 class="tl-detail-title" id="td-title"></h2>
+    <p class="tl-detail-desc" id="td-desc"></p>
+    <div class="tl-detail-sig" id="td-sig"></div>
+    <div class="tl-detail-tags" id="td-tags"></div>
+    <div class="tl-detail-related" id="td-related"></div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="tl-loading" id="tl-loading">
+    <div class="tl-loading-orb"></div>
+    <p>Initializing Sacred Timeline...</p>
+  </div>
+
+  <!-- Help toast -->
+  <div class="tl-help" id="tl-help">
+    <span><kbd>Scroll</kbd> Zoom</span>
+    <span><kbd>Drag</kbd> Pan</span>
+    <span><kbd>Click</kbd> Explore</span>
+  </div>
+</div>
+
+<style>
+  .sacred-timeline {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    background: #030712;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .sacred-timeline:active { cursor: grabbing; }
+
+  #tl-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ─── Tooltip ─── */
+  .tl-tooltip {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    background: rgba(5, 10, 25, 0.92);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(0, 223, 216, 0.2);
+    border-radius: 14px;
+    padding: 16px 20px;
+    max-width: 300px;
+    min-width: 200px;
+    box-shadow:
+      0 0 40px rgba(0, 223, 216, 0.06),
+      0 12px 40px rgba(0, 0, 0, 0.6);
+    z-index: 100;
+  }
+  .tl-tooltip.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .tl-tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .tl-tooltip-era {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #00dfd8;
+  }
+  .tl-tooltip-year {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  .tl-tooltip-title {
+    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #f0f4f8;
+    line-height: 1.35;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .tl-tooltip-desc {
+    margin: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.6;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .tl-tooltip-hint {
+    display: block;
+    margin-top: 10px;
+    font-size: 10px;
+    color: rgba(0, 223, 216, 0.5);
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+
+  /* ─── Detail Panel ─── */
+  .tl-detail {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 380px;
+    max-height: calc(100% - 32px);
+    overflow-y: auto;
+    background: rgba(5, 10, 25, 0.94);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(0, 223, 216, 0.15);
+    border-radius: 16px;
+    padding: 28px;
+    z-index: 150;
+    box-shadow:
+      0 0 60px rgba(0, 223, 216, 0.05),
+      0 20px 60px rgba(0, 0, 0, 0.6);
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  }
+  .tl-detail.visible {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  .tl-detail-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .tl-detail-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+  .tl-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .tl-detail-era {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(0, 223, 216, 0.1);
+    color: #00dfd8;
+    border: 1px solid rgba(0, 223, 216, 0.2);
+  }
+  .tl-detail-year {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  .tl-detail-title {
+    margin: 0 0 16px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #f0f4f8;
+    line-height: 1.3;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .tl-detail-desc {
+    margin: 0 0 16px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.7;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  .tl-detail-sig {
+    font-size: 13px;
+    color: rgba(0, 223, 216, 0.7);
+    font-style: italic;
+    padding: 12px 16px;
+    background: rgba(0, 223, 216, 0.04);
+    border-left: 2px solid rgba(0, 223, 216, 0.3);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .tl-detail-sig:empty { display: none; }
+  .tl-detail-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .tl-detail-tags:empty { display: none; }
+  .tl-detail-tag {
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.5);
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+  .tl-detail-related { margin-top: 8px; }
+  .tl-detail-related:empty { display: none; }
+  .tl-detail-related-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 8px;
+  }
+  .tl-detail-related-link {
+    display: block;
+    font-size: 12px;
+    color: rgba(0, 223, 216, 0.6);
+    padding: 6px 0;
+    cursor: pointer;
+    transition: color 0.15s;
+    font-family: 'Inter', system-ui, sans-serif;
+    border: none;
+    background: none;
+    text-align: left;
+    width: 100%;
+  }
+  .tl-detail-related-link:hover { color: #00dfd8; }
+
+  /* ─── Loading ─── */
+  .tl-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: #030712;
+    z-index: 200;
+    transition: opacity 0.6s ease;
+  }
+  .tl-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .tl-loading-orb {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, rgba(0, 223, 216, 0.4), transparent 70%);
+    box-shadow: 0 0 40px rgba(0, 223, 216, 0.2), 0 0 80px rgba(121, 40, 202, 0.1);
+    animation: orb-pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes orb-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.2); opacity: 1; }
+  }
+  .tl-loading p {
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── Help Toast ─── */
+  .tl-help {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    padding: 10px 24px;
+    background: rgba(5, 10, 25, 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 12px;
+    z-index: 50;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+  }
+  .tl-help.hidden {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+    pointer-events: none;
+  }
+  .tl-help span {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.35);
+    font-family: 'Inter', system-ui, sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tl-help kbd {
+    font-size: 9px;
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* ─── Scrollbar for detail panel ─── */
+  .tl-detail::-webkit-scrollbar { width: 4px; }
+  .tl-detail::-webkit-scrollbar-track { background: transparent; }
+  .tl-detail::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  @media (max-width: 640px) {
+    .tl-detail {
+      width: calc(100% - 32px);
+      max-height: 50vh;
+      top: auto;
+      bottom: 16px;
+      right: 16px;
+      left: 16px;
+    }
+    .tl-help { gap: 12px; padding: 8px 16px; }
+  }
+</style>
+
+<script>
+(function sacredTimeline() {
+  // =============================================
+  // SECTION 1 — CONFIGURATION
+  // =============================================
+  var CIV_COLORS = {
+    'mesopotamia': '#f5a623',
+    'egypt': '#f9cb28',
+    'indus-valley': '#50e3c2',
+    'china': '#ff4d4d',
+    'india': '#50e3c2',
+    'greece': '#007cf0',
+    'rome': '#ff0080',
+    'islamic-caliphates': '#7928ca',
+    'mongols': '#ff6b35',
+    'british-empire': '#007cf0',
+    'france': '#3b82f6',
+    'usa': '#f97316',
+    'italian-states': '#f43f5e',
+    'spanish-empire': '#eab308',
+    'holy-roman-empire': '#a855f7',
+    'ottoman': '#9c5de8'
+  };
+  var ERA_COLORS = {
+    'universe': '#f9cb28',
+    'earth': '#ff6b35',
+    'life': '#50e3c2',
+    'human-evolution': '#7928ca',
+    'ancient': '#f5a623',
+    'classical': '#00dfd8',
+    'medieval': '#9c5de8',
+    'early-modern': '#007cf0',
+    'industrial': '#ff4d4d',
+    'modern': '#50e3c2',
+    'present': '#aaffec'
+  };
+
+  var HIGH_IMP_IDS = ['big-bang','solar-system-formation','first-life','homo-sapiens-emerge',
+    'agriculture-revolution','writing-invented','pyramids','athens-democracy','alexander-conquests',
+    'roman-republic','julius-caesar-assassination','roman-empire-founded','fall-of-rome',
+    'islamic-founding','mongol-empire','black-death','renaissance','columbus-americas',
+    'printing-press','industrial-revolution','french-revolution','world-war-1','world-war-2',
+    'moon-landing','internet-born'];
+
+  var MED_IMP_IDS = ['out-of-africa','buddha-teaching','confucius-teaches',
+    'battle-of-marathon','julius-caesar-rubicon','birth-of-jesus','magna-carta'];
+
+  var HIGH_IMP = {};
+  var MED_IMP = {};
+  for (var i = 0; i < HIGH_IMP_IDS.length; i++) HIGH_IMP[HIGH_IMP_IDS[i]] = true;
+  for (var i = 0; i < MED_IMP_IDS.length; i++) MED_IMP[MED_IMP_IDS[i]] = true;
+
+  // =============================================
+  // SECTION 2 — DOM REFERENCES
+  // =============================================
+  var wrapper = document.getElementById('sacred-timeline');
+  var canvas = document.getElementById('tl-canvas');
+  if (!wrapper || !canvas) return;
+  var ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  var tooltip = document.getElementById('tl-tooltip');
+  var ttEra = document.getElementById('tt-era');
+  var ttYear = document.getElementById('tt-year');
+  var ttTitle = document.getElementById('tt-title');
+  var ttDesc = document.getElementById('tt-desc');
+  var loading = document.getElementById('tl-loading');
+  var helpToast = document.getElementById('tl-help');
+
+  // Detail panel elements
+  var detailPanel = document.getElementById('tl-detail');
+  var detailClose = document.getElementById('tl-detail-close');
+  var tdEra = document.getElementById('td-era');
+  var tdYear = document.getElementById('td-year');
+  var tdTitle = document.getElementById('td-title');
+  var tdDesc = document.getElementById('td-desc');
+  var tdSig = document.getElementById('td-sig');
+  var tdTags = document.getElementById('td-tags');
+  var tdRelated = document.getElementById('td-related');
+
+  // =============================================
+  // SECTION 3 — DATA
+  // =============================================
+  var allEvents = [];
+  var allEras = [];
+  try {
+    allEvents = JSON.parse(wrapper.dataset.events || '[]');
+    allEras = JSON.parse(wrapper.dataset.eras || '[]');
+  } catch(e) { /* parse error */ }
+
+  // =============================================
+  // SECTION 4 — STATE
+  // =============================================
+  var W = 0, H = 0, dpr = 1;
+  var mainLineY = 0;
+  var viewCenter = -500;
+  var pixelsPerYear = 0.35;
+  var minPPY = 0.00000001;
+  var maxPPY = 120;
+  var isDragging = false;
+  var dragStartX = 0, dragStartY = 0;
+  var dragStartCenter = 0;
+  var hoveredItem = null;
+  var selectedEvent = null;
+  var time = 0;
+  var stars = [];
+  var particles = [];
+  var layoutCache = [];
+  var needsLayout = true;
+  var interacted = false;
+
+  // =============================================
+  // SECTION 5 — UTILITIES
+  // =============================================
+  function getImportance(ev) {
+    if (HIGH_IMP[ev.id]) return 100;
+    if (MED_IMP[ev.id]) return 60;
+    return 25;
+  }
+
+  function getColor(ev) {
+    if (ev.civilization && CIV_COLORS[ev.civilization]) return CIV_COLORS[ev.civilization];
+    if (ev.era && ERA_COLORS[ev.era]) return ERA_COLORS[ev.era];
+    return '#00dfd8';
+  }
+
+  function formatYear(year) {
+    if (year <= -1e9) return (year / 1e9).toFixed(1) + ' B yrs';
+    if (year <= -1e6) return (year / 1e6).toFixed(1) + ' M yrs';
+    if (year <= -1e3) return Math.abs(Math.round(year)).toLocaleString() + ' BCE';
+    if (year < 0) return Math.abs(Math.round(year)) + ' BCE';
+    if (year === 0) return '1 CE';
+    return Math.round(year) + ' CE';
+  }
+
+  function getEraName(ev) {
+    for (var i = 0; i < allEras.length; i++) {
+      if (allEras[i].id === ev.era) return allEras[i].shortName || allEras[i].name;
+    }
+    return ev.era || '';
+  }
+
+  function hexToRgba(hex, alpha) {
+    var r = parseInt(hex.slice(1,3), 16);
+    var g = parseInt(hex.slice(3,5), 16);
+    var b = parseInt(hex.slice(5,7), 16);
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  }
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  // =============================================
+  // SECTION 6 — COORDINATE SYSTEM
+  // =============================================
+  function yearToX(year) {
+    return (year - viewCenter) * pixelsPerYear + W / 2;
+  }
+  function xToYear(x) {
+    return (x - W / 2) / pixelsPerYear + viewCenter;
+  }
+
+  // =============================================
+  // SECTION 7 — SIZING
+  // =============================================
+  function resize() {
+    W = wrapper.clientWidth || window.innerWidth;
+    H = wrapper.clientHeight || (window.innerHeight - 60);
+    dpr = window.devicePixelRatio || 1;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    mainLineY = H * 0.52;
+    needsLayout = true;
+  }
+
+  // =============================================
+  // SECTION 8 — STARFIELD
+  // =============================================
+  function createStars() {
+    stars = [];
+    var count = Math.min(400, Math.floor(W * H / 3000));
+    for (var i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        size: Math.random() * 1.4 + 0.2,
+        baseOpacity: Math.random() * 0.5 + 0.05,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.0005 + Math.random() * 0.002
+      });
+    }
+  }
+
+  function drawStars() {
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var twinkle = 0.5 + 0.5 * Math.sin(time * s.speed + s.phase);
+      ctx.globalAlpha = s.baseOpacity * twinkle;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size, 0, 6.2832);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // =============================================
+  // SECTION 9 — PARTICLE SYSTEM
+  // =============================================
+  function createParticles() {
+    particles = [];
+    var count = Math.min(140, Math.floor(W / 10));
+    for (var i = 0; i < count; i++) {
+      particles.push(makeParticle(Math.random() * W));
+    }
+  }
+
+  function makeParticle(startX) {
+    return {
+      x: startX,
+      y: mainLineY,
+      speed: 0.3 + Math.random() * 1.8,
+      size: 0.6 + Math.random() * 2,
+      opacity: 0.15 + Math.random() * 0.55,
+      hue: 175 + Math.random() * 35,
+      drift: (Math.random() - 0.5) * 0.03,
+      phase: Math.random() * Math.PI * 2
+    };
+  }
+
+  function updateParticles() {
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      p.x += p.speed;
+      p.y = mainLineY + Math.sin(p.x * 0.012 + p.phase) * 5;
+      if (p.x > W + 20) {
+        p.x = -20;
+        p.opacity = 0.15 + Math.random() * 0.55;
+        p.speed = 0.3 + Math.random() * 1.8;
+      }
+    }
+  }
+
+  function drawParticles() {
+    for (var i = 0; i < particles.length; i++) {
+      var p = particles[i];
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = 'hsl(' + p.hue + ',100%,80%)';
+      ctx.fillStyle = 'hsl(' + p.hue + ',100%,88%)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, 6.2832);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // =============================================
+  // SECTION 10 — MAIN TIMELINE RENDERING
+  // =============================================
+  function drawMainTimeline() {
+    var waveFn = function(x) {
+      return mainLineY + Math.sin(x * 0.003 + time * 0.0006) * 3
+        + Math.sin(x * 0.0017 + time * 0.001) * 1.5;
+    };
+
+    // Pass 1: Wide nebula glow
+    ctx.save();
+    ctx.shadowBlur = 90;
+    ctx.shadowColor = 'rgba(0, 223, 216, 0.25)';
+    ctx.strokeStyle = 'rgba(0, 223, 216, 0.03)';
+    ctx.lineWidth = 28;
+    ctx.beginPath();
+    for (var x = 0; x <= W; x += 3) {
+      if (x === 0) ctx.moveTo(x, waveFn(x));
+      else ctx.lineTo(x, waveFn(x));
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    // Pass 2: Purple haze
+    ctx.save();
+    ctx.shadowBlur = 50;
+    ctx.shadowColor = 'rgba(121, 40, 202, 0.3)';
+    ctx.strokeStyle = 'rgba(121, 40, 202, 0.06)';
+    ctx.lineWidth = 16;
+    ctx.beginPath();
+    for (var x = 0; x <= W; x += 3) {
+      if (x === 0) ctx.moveTo(x, waveFn(x));
+      else ctx.lineTo(x, waveFn(x));
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    // Pass 3: Cyan glow
+    ctx.save();
+    ctx.shadowBlur = 25;
+    ctx.shadowColor = '#00dfd8';
+    ctx.strokeStyle = 'rgba(0, 223, 216, 0.22)';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    for (var x = 0; x <= W; x += 3) {
+      if (x === 0) ctx.moveTo(x, waveFn(x));
+      else ctx.lineTo(x, waveFn(x));
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    // Pass 4: Bright core
+    ctx.save();
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = 'rgba(255,255,255,0.5)';
+    ctx.strokeStyle = 'rgba(224, 240, 255, 0.82)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    for (var x = 0; x <= W; x += 3) {
+      if (x === 0) ctx.moveTo(x, waveFn(x));
+      else ctx.lineTo(x, waveFn(x));
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // =============================================
+  // SECTION 11 — EVENT LAYOUT
+  // =============================================
+  function computeLayout() {
+    var viewLeft = xToYear(0);
+    var viewRight = xToYear(W);
+    var yearsVisible = viewRight - viewLeft;
+    var buffer = yearsVisible * 0.3;
+
+    // Importance filter based on zoom
+    var minImp;
+    if (yearsVisible > 5e9) minImp = 100;      // Universe scale
+    else if (yearsVisible > 1e6) minImp = 90;   // Geological
+    else if (yearsVisible > 50000) minImp = 80;
+    else if (yearsVisible > 5000) minImp = 50;
+    else if (yearsVisible > 500) minImp = 30;
+    else minImp = 0;
+
+    var filtered = [];
+    for (var i = 0; i < allEvents.length; i++) {
+      var ev = allEvents[i];
+      var imp = getImportance(ev);
+      if (imp < minImp) continue;
+      if (ev.year < viewLeft - buffer || ev.year > viewRight + buffer) continue;
+      filtered.push(ev);
+    }
+
+    // Sort by year
+    filtered.sort(function(a, b) { return a.year - b.year; });
+
+    // Remove events too close on screen (min 70px spacing)
+    var minSpacing = 70;
+    var spaced = [];
+    var lastScreenX = -Infinity;
+    for (var i = 0; i < filtered.length; i++) {
+      var sx = yearToX(filtered[i].year);
+      var imp = getImportance(filtered[i]);
+      if (sx - lastScreenX >= minSpacing || imp >= 100) {
+        spaced.push(filtered[i]);
+        lastScreenX = sx;
+      }
+    }
+
+    // Build layout items with branch geometry
+    layoutCache = [];
+    for (var i = 0; i < spaced.length; i++) {
+      var ev = spaced[i];
+      var screenX = yearToX(ev.year);
+      var imp = getImportance(ev);
+      var color = getColor(ev);
+
+      // Alternate up (-1) / down (+1), with seeded variation
+      var dir = (i % 2 === 0) ? -1 : 1;
+
+      // Branch height based on importance + organic variation
+      var baseH = imp >= 100 ? 185 : imp >= 60 ? 145 : 110;
+      var variation = Math.sin(ev.year * 0.07 + i * 1.7) * 25;
+      var branchH = baseH + variation;
+
+      // End point
+      var endY = mainLineY + dir * branchH;
+
+      // Bezier control points for organic curve
+      var lean = Math.sin(ev.year * 0.03 + i * 0.8) * 18;
+      var cp1x = screenX + lean * 0.2;
+      var cp1y = mainLineY + dir * branchH * 0.35;
+      var cp2x = screenX + lean * 0.6;
+      var cp2y = mainLineY + dir * branchH * 0.75;
+      var endX = screenX + lean;
+
+      layoutCache.push({
+        event: ev,
+        x: screenX,
+        endX: endX,
+        endY: endY,
+        dir: dir,
+        color: color,
+        importance: imp,
+        cp1x: cp1x,
+        cp1y: cp1y,
+        cp2x: cp2x,
+        cp2y: cp2y,
+        branchH: branchH
+      });
+    }
+
+    needsLayout = false;
+  }
+
+  // =============================================
+  // SECTION 12 — BRANCH RENDERING
+  // =============================================
+  function drawBranches() {
+    for (var i = 0; i < layoutCache.length; i++) {
+      drawBranch(layoutCache[i], i);
+    }
+  }
+
+  function drawBranch(item, index) {
+    var color = item.color;
+    var pulse = 0.82 + 0.18 * Math.sin(time * 0.0015 + index * 0.7);
+    var isHov = hoveredItem && hoveredItem.event.id === item.event.id;
+    var isSel = selectedEvent && selectedEvent.id === item.event.id;
+    var brightness = isHov ? 1.4 : (isSel ? 1.2 : 1);
+
+    // Connection point glow on main line
+    ctx.save();
+    ctx.globalAlpha = (isHov ? 0.6 : 0.25) * pulse * brightness;
+    ctx.shadowBlur = isHov ? 35 : 20;
+    ctx.shadowColor = color;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(item.x, mainLineY, isHov ? 8 : 5, 0, 6.2832);
+    ctx.fill();
+    ctx.restore();
+
+    // Branch curve — outer glow
+    ctx.save();
+    ctx.globalAlpha = (isHov ? 0.3 : 0.12) * pulse * brightness;
+    ctx.shadowBlur = isHov ? 40 : 25;
+    ctx.shadowColor = color;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = isHov ? 8 : 5;
+    ctx.beginPath();
+    ctx.moveTo(item.x, mainLineY);
+    ctx.bezierCurveTo(item.cp1x, item.cp1y, item.cp2x, item.cp2y, item.endX, item.endY);
+    ctx.stroke();
+    ctx.restore();
+
+    // Branch curve — inner core
+    ctx.save();
+    ctx.globalAlpha = (isHov ? 0.85 : 0.55) * pulse * brightness;
+    ctx.shadowBlur = isHov ? 15 : 8;
+    ctx.shadowColor = color;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = isHov ? 2.5 : 1.5;
+    ctx.beginPath();
+    ctx.moveTo(item.x, mainLineY);
+    ctx.bezierCurveTo(item.cp1x, item.cp1y, item.cp2x, item.cp2y, item.endX, item.endY);
+    ctx.stroke();
+    ctx.restore();
+
+    // White hot core for high-importance or hovered
+    if (isHov || item.importance >= 100) {
+      ctx.save();
+      ctx.globalAlpha = (isHov ? 0.6 : 0.2) * pulse;
+      ctx.shadowBlur = 4;
+      ctx.shadowColor = '#fff';
+      ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(item.x, mainLineY);
+      ctx.bezierCurveTo(item.cp1x, item.cp1y, item.cp2x, item.cp2y, item.endX, item.endY);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  // =============================================
+  // SECTION 13 — EVENT NODES
+  // =============================================
+  function drawEventNodes() {
+    for (var i = 0; i < layoutCache.length; i++) {
+      drawEventNode(layoutCache[i]);
+    }
+  }
+
+  function drawEventNode(item) {
+    var isHov = hoveredItem && hoveredItem.event.id === item.event.id;
+    var isSel = selectedEvent && selectedEvent.id === item.event.id;
+    var active = isHov || isSel;
+    var color = item.color;
+    var radius = active ? 7 : (item.importance >= 100 ? 5 : 3.5);
+
+    // Outer halo
+    ctx.save();
+    ctx.globalAlpha = active ? 0.35 : 0.12;
+    ctx.shadowBlur = active ? 40 : 20;
+    ctx.shadowColor = color;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(item.endX, item.endY, radius * 3.5, 0, 6.2832);
+    ctx.fill();
+    ctx.restore();
+
+    // Mid ring
+    ctx.save();
+    ctx.globalAlpha = active ? 0.6 : 0.3;
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = color;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(item.endX, item.endY, radius * 1.8, 0, 6.2832);
+    ctx.fill();
+    ctx.restore();
+
+    // Bright core
+    ctx.save();
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = '#ffffff';
+    ctx.fillStyle = active ? '#ffffff' : hexToRgba(color, 0.9);
+    ctx.beginPath();
+    ctx.arc(item.endX, item.endY, radius, 0, 6.2832);
+    ctx.fill();
+    ctx.restore();
+
+    // ── Label rendering ──
+    var viewYears = xToYear(W) - xToYear(0);
+    var showLabel = viewYears < 20000 || item.importance >= 100;
+    var showYear = viewYears < 8000 || item.importance >= 100;
+
+    if (showLabel) {
+      var label = item.event.title;
+      if (label.length > 28 && !active) label = label.substring(0, 25) + '...';
+
+      var labelDir = item.dir;
+      var labelY = item.endY + labelDir * (active ? 20 : 16);
+      var textBaseline = labelDir === -1 ? 'bottom' : 'top';
+
+      ctx.save();
+      ctx.textAlign = 'center';
+      ctx.textBaseline = textBaseline;
+
+      // Text shadow for readability
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = 'rgba(0,0,0,0.9)';
+
+      // Title
+      ctx.font = (active ? '600 13px' : '500 11px') + " 'Inter', system-ui, sans-serif";
+      ctx.fillStyle = active ? '#ffffff' : 'rgba(255,255,255,0.6)';
+      ctx.fillText(label, item.endX, labelY);
+
+      // Year sublabel
+      if (showYear) {
+        var yearLabelY = labelY + labelDir * (active ? 16 : 14);
+        ctx.font = "9px 'JetBrains Mono', monospace";
+        ctx.fillStyle = active ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.25)';
+        ctx.fillText(formatYear(item.event.year), item.endX, yearLabelY);
+      }
+
+      ctx.restore();
+    }
+  }
+
+  // =============================================
+  // SECTION 14 — ERA MARKERS & AXIS
+  // =============================================
+  function drawEraMarkers() {
+    var viewLeft = xToYear(0);
+    var viewRight = xToYear(W);
+    var span = viewRight - viewLeft;
+
+    // Dynamic tick interval
+    var interval;
+    if (span > 1e10) interval = 5e9;
+    else if (span > 1e9) interval = 500000000;
+    else if (span > 1e8) interval = 50000000;
+    else if (span > 1e7) interval = 5000000;
+    else if (span > 1e6) interval = 1000000;
+    else if (span > 100000) interval = 20000;
+    else if (span > 50000) interval = 10000;
+    else if (span > 10000) interval = 2000;
+    else if (span > 5000) interval = 1000;
+    else if (span > 2000) interval = 500;
+    else if (span > 500) interval = 100;
+    else if (span > 100) interval = 50;
+    else if (span > 20) interval = 10;
+    else interval = 1;
+
+    var tickStart = Math.floor(viewLeft / interval) * interval;
+    var y = H - 24;
+
+    ctx.save();
+    ctx.font = "9px 'JetBrains Mono', monospace";
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+
+    for (var yr = tickStart; yr <= viewRight; yr += interval) {
+      var x = yearToX(yr);
+      if (x < 30 || x > W - 30) continue;
+
+      // Subtle tick line from main line
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, mainLineY - 6);
+      ctx.lineTo(x, mainLineY + 6);
+      ctx.stroke();
+
+      // Year label
+      ctx.fillStyle = 'rgba(255,255,255,0.15)';
+      ctx.fillText(formatYear(yr), x, y);
+    }
+    ctx.restore();
+
+    // Era boundary markers
+    if (span < 100000) {
+      for (var i = 0; i < allEras.length; i++) {
+        var era = allEras[i];
+        var sx = yearToX(era.start);
+        var ex = yearToX(era.end);
+        if (ex < 0 || sx > W) continue;
+
+        // Subtle vertical boundary line
+        if (sx > 30 && sx < W - 30) {
+          ctx.save();
+          ctx.strokeStyle = hexToRgba(era.color, 0.08);
+          ctx.lineWidth = 1;
+          ctx.setLineDash([4, 8]);
+          ctx.beginPath();
+          ctx.moveTo(sx, 40);
+          ctx.lineTo(sx, H - 40);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Era name
+        var midX = Math.max(40, Math.min(W - 40, (sx + ex) / 2));
+        if (midX > 40 && midX < W - 40) {
+          ctx.save();
+          ctx.font = "700 10px 'Inter', system-ui, sans-serif";
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillStyle = hexToRgba(era.color, 0.2);
+          ctx.fillText((era.shortName || era.name).toUpperCase(), midX, 16);
+          ctx.restore();
+        }
+      }
+    }
+  }
+
+  // =============================================
+  // SECTION 15 — HIT TESTING
+  // =============================================
+  function hitTest(mx, my) {
+    var bestDist = Infinity;
+    var bestItem = null;
+    var hitRadius = 28;
+
+    for (var i = 0; i < layoutCache.length; i++) {
+      var item = layoutCache[i];
+      // Test endpoint node
+      var dx = mx - item.endX;
+      var dy = my - item.endY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < hitRadius && dist < bestDist) {
+        bestDist = dist;
+        bestItem = item;
+      }
+      // Test connection point on main line
+      var dx2 = mx - item.x;
+      var dy2 = my - mainLineY;
+      var dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+      if (dist2 < hitRadius && dist2 < bestDist) {
+        bestDist = dist2;
+        bestItem = item;
+      }
+    }
+    return bestItem;
+  }
+
+  // =============================================
+  // SECTION 16 — TOOLTIP
+  // =============================================
+  function showTooltip(item) {
+    if (!tooltip || !item) return;
+    hoveredItem = item;
+
+    if (ttEra) {
+      ttEra.textContent = getEraName(item.event);
+      ttEra.style.color = item.color;
+    }
+    if (ttYear) ttYear.textContent = formatYear(item.event.year);
+    if (ttTitle) ttTitle.textContent = item.event.title;
+    if (ttDesc) {
+      var desc = item.event.description || '';
+      ttDesc.textContent = desc.length > 130 ? desc.substring(0, 127) + '...' : desc;
+    }
+
+    // Position near the node
+    var tipW = 300;
+    var tipX = item.endX + 18;
+    var tipY = item.endY - 30;
+    if (tipX + tipW > W - 16) tipX = item.endX - tipW - 18;
+    if (tipY < 16) tipY = 16;
+    if (tipY > H - 220) tipY = H - 220;
+
+    tooltip.style.left = tipX + 'px';
+    tooltip.style.top = tipY + 'px';
+    tooltip.classList.add('visible');
+  }
+
+  function hideTooltip() {
+    hoveredItem = null;
+    if (tooltip) tooltip.classList.remove('visible');
+  }
+
+  // =============================================
+  // SECTION 17 — DETAIL PANEL
+  // =============================================
+  function showDetail(ev) {
+    selectedEvent = ev;
+    if (!detailPanel) return;
+
+    if (tdEra) {
+      tdEra.textContent = getEraName(ev);
+      tdEra.style.background = hexToRgba(getColor(ev), 0.1);
+      tdEra.style.color = getColor(ev);
+      tdEra.style.borderColor = hexToRgba(getColor(ev), 0.2);
+    }
+    if (tdYear) tdYear.textContent = formatYear(ev.year);
+    if (tdTitle) tdTitle.textContent = ev.title;
+    if (tdDesc) tdDesc.textContent = ev.description || '';
+    if (tdSig) tdSig.textContent = ev.significance || '';
+
+    // Tags
+    if (tdTags) {
+      tdTags.innerHTML = '';
+      var tags = ev.tags || [];
+      for (var i = 0; i < tags.length; i++) {
+        var span = document.createElement('span');
+        span.className = 'tl-detail-tag';
+        span.textContent = '#' + tags[i];
+        tdTags.appendChild(span);
+      }
+    }
+
+    // Related events
+    if (tdRelated) {
+      tdRelated.innerHTML = '';
+      var related = ev.related || [];
+      if (related.length > 0) {
+        var title = document.createElement('div');
+        title.className = 'tl-detail-related-title';
+        title.textContent = 'Related Events';
+        tdRelated.appendChild(title);
+
+        for (var i = 0; i < related.length; i++) {
+          var relEv = findEvent(related[i]);
+          if (relEv) {
+            var btn = document.createElement('button');
+            btn.className = 'tl-detail-related-link';
+            btn.textContent = '→ ' + relEv.title + ' (' + formatYear(relEv.year) + ')';
+            btn.dataset.year = String(relEv.year);
+            btn.dataset.id = relEv.id;
+            btn.addEventListener('click', function() {
+              var yr = parseFloat(this.dataset.year);
+              var id = this.dataset.id;
+              animateToYear(yr, 800);
+              var target = findEvent(id);
+              if (target) {
+                setTimeout(function() {
+                  showDetail(target);
+                  needsLayout = true;
+                }, 850);
+              }
+            });
+            tdRelated.appendChild(btn);
+          }
+        }
+      }
+    }
+
+    detailPanel.classList.add('visible');
+  }
+
+  function hideDetail() {
+    selectedEvent = null;
+    if (detailPanel) detailPanel.classList.remove('visible');
+  }
+
+  function findEvent(id) {
+    for (var i = 0; i < allEvents.length; i++) {
+      if (allEvents[i].id === id) return allEvents[i];
+    }
+    return null;
+  }
+
+  // =============================================
+  // SECTION 18 — INTERACTION HANDLERS
+  // =============================================
+  function onMouseMove(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+
+    if (isDragging) {
+      var dx = mx - dragStartX;
+      viewCenter = dragStartCenter - dx / pixelsPerYear;
+      needsLayout = true;
+      dispatchViewUpdate();
+      return;
+    }
+
+    var hit = hitTest(mx, my);
+    if (hit) {
+      canvas.style.cursor = 'pointer';
+      showTooltip(hit);
+    } else {
+      canvas.style.cursor = 'grab';
+      hideTooltip();
+    }
+  }
+
+  function onMouseDown(e) {
+    if (e.button !== 0) return;
+    var rect = canvas.getBoundingClientRect();
+    dragStartX = e.clientX - rect.left;
+    dragStartY = e.clientY - rect.top;
+    dragStartCenter = viewCenter;
+    isDragging = true;
+    canvas.style.cursor = 'grabbing';
+    hideTooltip();
+
+    if (!interacted) {
+      interacted = true;
+      if (helpToast) helpToast.classList.add('hidden');
+    }
+  }
+
+  function onMouseUp(e) {
+    if (!isDragging) return;
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+    var dragDist = Math.abs(mx - dragStartX) + Math.abs(my - dragStartY);
+
+    isDragging = false;
+    canvas.style.cursor = 'grab';
+
+    // If minimal drag → it's a click
+    if (dragDist < 6) {
+      var hit = hitTest(mx, my);
+      if (hit) {
+        showDetail(hit.event);
+      } else {
+        hideDetail();
+      }
+    }
+  }
+
+  function onWheel(e) {
+    e.preventDefault();
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var yearAtMouse = xToYear(mx);
+
+    var zoomFactor = e.deltaY > 0 ? 0.82 : 1.22;
+    var newPPY = pixelsPerYear * zoomFactor;
+    newPPY = Math.max(minPPY, Math.min(maxPPY, newPPY));
+    pixelsPerYear = newPPY;
+
+    // Keep year under mouse fixed
+    viewCenter = yearAtMouse - (mx - W / 2) / pixelsPerYear;
+    needsLayout = true;
+    dispatchViewUpdate();
+
+    if (!interacted) {
+      interacted = true;
+      if (helpToast) helpToast.classList.add('hidden');
+    }
+  }
+
+  // Touch support
+  var touchStartX = 0, touchStartCenter = 0, lastPinchDist = 0;
+
+  function onTouchStart(e) {
+    if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+      touchStartCenter = viewCenter;
+      isDragging = true;
+    }
+  }
+
+  function onTouchMove(e) {
+    e.preventDefault();
+    if (e.touches.length === 1 && isDragging) {
+      var dx = e.touches[0].clientX - touchStartX;
+      viewCenter = touchStartCenter - dx / pixelsPerYear;
+      needsLayout = true;
+      dispatchViewUpdate();
+    }
+    if (e.touches.length === 2) {
+      var dx = e.touches[0].clientX - e.touches[1].clientX;
+      var dy = e.touches[0].clientY - e.touches[1].clientY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (lastPinchDist > 0) {
+        var scale = dist / lastPinchDist;
+        pixelsPerYear = Math.max(minPPY, Math.min(maxPPY, pixelsPerYear * scale));
+        needsLayout = true;
+        dispatchViewUpdate();
+      }
+      lastPinchDist = dist;
+    }
+  }
+
+  function onTouchEnd() {
+    isDragging = false;
+    lastPinchDist = 0;
+  }
+
+  function onKeyDown(e) {
+    if (e.target !== document.body) return;
+    var pan = (xToYear(W) - xToYear(0)) * 0.15;
+    if (e.key === 'ArrowLeft' || e.key === 'a') {
+      viewCenter -= pan;
+      needsLayout = true;
+      dispatchViewUpdate();
+    } else if (e.key === 'ArrowRight' || e.key === 'd') {
+      viewCenter += pan;
+      needsLayout = true;
+      dispatchViewUpdate();
+    } else if (e.key === '+' || e.key === '=') {
+      pixelsPerYear = Math.min(maxPPY, pixelsPerYear * 1.5);
+      needsLayout = true;
+      dispatchViewUpdate();
+    } else if (e.key === '-' || e.key === '_') {
+      pixelsPerYear = Math.max(minPPY, pixelsPerYear / 1.5);
+      needsLayout = true;
+      dispatchViewUpdate();
+    } else if (e.key === 'Escape') {
+      hideDetail();
+    }
+  }
+
+  // =============================================
+  // SECTION 19 — VIEW UPDATE DISPATCH
+  // =============================================
+  function dispatchViewUpdate() {
+    var viewLeft = xToYear(0);
+    var viewRight = xToYear(W);
+    var centerYear = viewCenter;
+    var span = viewRight - viewLeft;
+
+    // Determine zoom label
+    var zoomLabel = 'Events';
+    if (span > 1e9) zoomLabel = 'Universe';
+    else if (span > 1e6) zoomLabel = 'Geological';
+    else if (span > 100000) zoomLabel = 'Prehistoric';
+    else if (span > 10000) zoomLabel = 'Eras';
+    else if (span > 2000) zoomLabel = 'Centuries';
+    else if (span > 200) zoomLabel = 'Decades';
+    else if (span > 20) zoomLabel = 'Years';
+    else zoomLabel = 'Detail';
+
+    // Determine current era
+    var currentEra = '';
+    for (var i = 0; i < allEras.length; i++) {
+      if (centerYear >= allEras[i].start && centerYear < allEras[i].end) {
+        currentEra = allEras[i].shortName || allEras[i].name;
+        break;
+      }
+    }
+
+    document.dispatchEvent(new CustomEvent('timeline:view-update', {
+      detail: {
+        center: centerYear,
+        leftYear: viewLeft,
+        rightYear: viewRight,
+        pixelsPerYear: pixelsPerYear,
+        zoomLabel: zoomLabel,
+        eraName: currentEra,
+        yearLabel: formatYear(centerYear)
+      }
+    }));
+  }
+
+  // =============================================
+  // SECTION 20 — ANIMATION LOOP
+  // =============================================
+  function render() {
+    time = performance.now();
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Background gradient
+    var grad = ctx.createRadialGradient(W * 0.5, H * 0.5, 0, W * 0.5, H * 0.5, Math.max(W, H) * 0.7);
+    grad.addColorStop(0, '#0c1220');
+    grad.addColorStop(0.5, '#070d18');
+    grad.addColorStop(1, '#030712');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    drawStars();
+    drawMainTimeline();
+    drawEraMarkers();
+
+    if (needsLayout) computeLayout();
+
+    drawBranches();
+    updateParticles();
+    drawParticles();
+    drawEventNodes();
+
+    requestAnimationFrame(render);
+  }
+
+  // =============================================
+  // SECTION 21 — SMOOTH NAVIGATION
+  // =============================================
+  function animateToYear(targetYear, duration) {
+    duration = duration || 1000;
+    var startCenter = viewCenter;
+    var startPPY = pixelsPerYear;
+    var startTime = performance.now();
+
+    // If target is very far, also adjust zoom
+    var dist = Math.abs(targetYear - startCenter);
+    var targetPPY = pixelsPerYear;
+    if (dist > 10000) targetPPY = Math.max(0.05, Math.min(2, pixelsPerYear));
+    if (dist > 1000000) targetPPY = 0.0001;
+
+    function step(now) {
+      var elapsed = now - startTime;
+      var t = Math.min(elapsed / duration, 1);
+      // Cubic ease in-out
+      t = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
+      viewCenter = startCenter + (targetYear - startCenter) * t;
+      pixelsPerYear = startPPY + (targetPPY - startPPY) * t;
+      needsLayout = true;
+      dispatchViewUpdate();
+
+      if (t < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  // =============================================
+  // SECTION 22 — INITIALIZATION
+  // =============================================
+  function init() {
+    resize();
+    createStars();
+    createParticles();
+    computeLayout();
+
+    // Mouse events
+    canvas.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('wheel', onWheel, { passive: false });
+    canvas.addEventListener('mouseleave', function() {
+      hideTooltip();
+      if (isDragging) { isDragging = false; canvas.style.cursor = 'grab'; }
+    });
+
+    // Touch events
+    canvas.addEventListener('touchstart', onTouchStart, { passive: true });
+    canvas.addEventListener('touchmove', onTouchMove, { passive: false });
+    canvas.addEventListener('touchend', onTouchEnd, { passive: true });
+
+    // Keyboard
+    document.addEventListener('keydown', onKeyDown);
+
+    // Detail close
+    if (detailClose) {
+      detailClose.addEventListener('click', hideDetail);
+    }
+
+    // Resize observer
+    var ro = new ResizeObserver(function() {
+      resize();
+      createStars();
+      createParticles();
+    });
+    ro.observe(wrapper);
+
+    // External navigation events
+    document.addEventListener('timeline:goto', function(e) {
+      var detail = e.detail || {};
+      var q = detail.query || '';
+      var match = q.match(/(-?\d[\d,]*)/);
+      if (match) {
+        var yr = parseInt(match[1].replace(/,/g, ''));
+        if (q.toLowerCase().indexOf('bce') !== -1 || q.toLowerCase().indexOf('bc') !== -1) yr = -Math.abs(yr);
+        animateToYear(yr, 800);
+      }
+    });
+
+    document.addEventListener('timeline:zoom-in', function() {
+      pixelsPerYear = Math.min(maxPPY, pixelsPerYear * 2);
+      needsLayout = true;
+      dispatchViewUpdate();
+    });
+
+    document.addEventListener('timeline:zoom-out', function() {
+      pixelsPerYear = Math.max(minPPY, pixelsPerYear / 2);
+      needsLayout = true;
+      dispatchViewUpdate();
+    });
+
+    document.addEventListener('timeline:scope-change', function(e) {
+      var scope = (e.detail || {}).scope || 'human';
+      if (scope === 'human') {
+        animateToYear(-500, 1200);
+        setTimeout(function() { pixelsPerYear = 0.35; needsLayout = true; }, 200);
+      } else if (scope === 'deep') {
+        animateToYear(-2000000000, 1200);
+        setTimeout(function() { pixelsPerYear = 0.0000002; needsLayout = true; }, 200);
+      } else if (scope === 'universe') {
+        animateToYear(-7000000000, 1200);
+        setTimeout(function() { pixelsPerYear = 0.00000005; needsLayout = true; }, 200);
+      }
+    });
+
+    // URL param navigation
+    var urlParams = new URLSearchParams(window.location.search);
+    var startYear = urlParams.get('year');
+    if (startYear) {
+      var yr = parseFloat(startYear);
+      if (!isNaN(yr)) {
+        viewCenter = yr;
+        needsLayout = true;
+      }
+    }
+
+    // Hide loading
+    setTimeout(function() {
+      if (loading) loading.classList.add('hidden');
+    }, 700);
+
+    // Hide help after 6 seconds
+    setTimeout(function() {
+      if (helpToast && !helpToast.classList.contains('hidden')) {
+        helpToast.classList.add('hidden');
+      }
+    }, 6000);
+
+    // Start render loop
+    render();
+    dispatchViewUpdate();
+  }
+
+  // Start!
+  init();
+})();
+</script>

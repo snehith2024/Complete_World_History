@@ -1,0 +1,269 @@
+---
+const footerColumns = [
+  {
+    title: 'Eras',
+    links: [
+      { label: 'Universe Origins', href: '/timeline#universe' },
+      { label: 'Ancient Civilizations', href: '/timeline#ancient' },
+      { label: 'Classical Era', href: '/timeline#classical' },
+      { label: 'Medieval Period', href: '/timeline#medieval' },
+      { label: 'Early Modern Era', href: '/timeline#early-modern' },
+      { label: 'Modern History', href: '/timeline#modern' },
+    ]
+  },
+  {
+    title: 'Explore',
+    links: [
+      { label: 'Timeline', href: '/timeline' },
+      { label: 'Historical Map', href: '/map' },
+      { label: 'Civilizations', href: '/civilizations' },
+      { label: 'Historical Figures', href: '/figures' },
+      { label: 'Knowledge Graph', href: '/knowledge-graph' },
+      { label: 'Compare History', href: '/compare' },
+    ]
+  },
+  {
+    title: 'Features',
+    links: [
+      { label: 'On This Day', href: '/on-this-day' },
+      { label: 'Search History', href: '/search' },
+      { label: 'Timeline Layers', href: '/timeline#layers' },
+      { label: 'AI Assistant', href: '/timeline' },
+      { label: 'Parallel Civilizations', href: '/timeline' },
+      { label: 'History Comparison', href: '/compare' },
+    ]
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Methodology', href: '/about#methodology' },
+      { label: 'Sources', href: '/about#sources' },
+      { label: 'Contact', href: '/contact' },
+      { label: 'Sitemap', href: '/sitemap.xml' },
+    ]
+  },
+];
+---
+
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <!-- Top section -->
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo" aria-label="Complete World History">
+          <svg width="32" height="32" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <circle cx="14" cy="14" r="13" stroke="url(#footer-grad)" stroke-width="1.5"/>
+            <ellipse cx="14" cy="14" rx="13" ry="5" stroke="url(#footer-grad)" stroke-width="1" opacity="0.5"/>
+            <line x1="1" y1="14" x2="27" y2="14" stroke="url(#footer-grad)" stroke-width="1" opacity="0.5"/>
+            <line x1="14" y1="1" x2="14" y2="27" stroke="url(#footer-grad)" stroke-width="1" opacity="0.5"/>
+            <circle cx="14" cy="14" r="2.5" fill="url(#footer-grad)"/>
+            <defs>
+              <linearGradient id="footer-grad" x1="0" y1="0" x2="28" y2="28">
+                <stop offset="0%" stop-color="#007cf0"/>
+                <stop offset="50%" stop-color="#00dfd8"/>
+                <stop offset="100%" stop-color="#7928ca"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div>
+            <div class="footer-logo-title">Complete World History</div>
+            <div class="footer-logo-sub text-mono">allworldhistory.com</div>
+          </div>
+        </a>
+        <p class="footer-tagline">
+          13.8 billion years of human and cosmic history, infinitely explorable.
+        </p>
+        <!-- Mini timeline strip -->
+        <div class="footer-timeline-strip" aria-hidden="true">
+          <span class="timeline-strip-item" style="--c: var(--color-era-universe)">Big Bang</span>
+          <span class="timeline-strip-sep">→</span>
+          <span class="timeline-strip-item" style="--c: var(--color-era-ancient)">Ancients</span>
+          <span class="timeline-strip-sep">→</span>
+          <span class="timeline-strip-item" style="--c: var(--color-era-classical)">Classical</span>
+          <span class="timeline-strip-sep">→</span>
+          <span class="timeline-strip-item" style="--c: var(--color-era-modern)">Modern</span>
+          <span class="timeline-strip-sep">→</span>
+          <span class="timeline-strip-item" style="--c: var(--color-era-present)">Today</span>
+        </div>
+      </div>
+
+      <!-- Footer Columns -->
+      <nav class="footer-columns" aria-label="Footer navigation">
+        {footerColumns.map(col => (
+          <div class="footer-col">
+            <h3 class="footer-col-title eyebrow">{col.title}</h3>
+            <ul>
+              {col.links.map(link => (
+                <li>
+                  <a href={link.href} class="footer-link">{link.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
+    </div>
+
+    <div class="divider footer-divider"></div>
+
+    <!-- Bottom section -->
+    <div class="footer-bottom">
+      <p class="footer-copy text-caption text-body">
+        © {new Date().getFullYear()} Complete World History. Built to make history infinitely explorable.
+      </p>
+      <div class="footer-bottom-links">
+        <a href="/privacy" class="footer-bottom-link text-caption">Privacy</a>
+        <a href="/terms" class="footer-bottom-link text-caption">Terms</a>
+        <span class="footer-mono text-mono" aria-label="Current year">
+          {new Date().getFullYear()} CE
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-bg-soft);
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-4xl);
+    padding-bottom: var(--space-xl);
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: var(--space-4xl);
+    margin-bottom: var(--space-3xl);
+  }
+
+  /* Brand */
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .footer-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    text-decoration: none;
+  }
+  .footer-logo-title {
+    font-size: var(--text-body-sm);
+    font-weight: 600;
+    color: var(--color-ink);
+    letter-spacing: -0.3px;
+  }
+  .footer-logo-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-mute);
+    margin-top: 1px;
+  }
+  .footer-tagline {
+    font-size: var(--text-body-sm);
+    color: var(--color-body);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  /* Timeline strip */
+  .footer-timeline-strip {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+  .timeline-strip-item {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--c, var(--color-mute));
+    font-weight: 500;
+  }
+  .timeline-strip-sep {
+    font-size: 10px;
+    color: var(--color-mute);
+  }
+
+  /* Columns */
+  .footer-columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-xl);
+  }
+
+  .footer-col-title {
+    color: var(--color-mute);
+    margin-bottom: var(--space-md);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+
+  .footer-col ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .footer-link {
+    font-size: var(--text-body-sm);
+    color: var(--color-body);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    line-height: 1.4;
+  }
+  .footer-link:hover {
+    color: var(--color-ink);
+  }
+
+  /* Bottom */
+  .footer-divider {
+    margin-bottom: var(--space-lg);
+  }
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+  .footer-bottom-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .footer-bottom-link {
+    color: var(--color-body);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .footer-bottom-link:hover { color: var(--color-ink); }
+  .footer-mono {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-mute);
+    border: 1px solid var(--color-border);
+    padding: 2px 6px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Responsive */
+  @media (max-width: 1199px) {
+    .footer-columns { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 959px) {
+    .footer-top {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xl);
+    }
+    .footer-columns {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-lg);
+    }
+  }
+  @media (max-width: 599px) {
+    .footer-columns { grid-template-columns: 1fr; }
+    .footer-bottom { flex-direction: column; align-items: flex-start; }
+  }
+</style>

@@ -1,0 +1,500 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import civs from '../../data/civilizations.json';
+import events from '../../data/events.json';
+import figures from '../../data/figures.json';
+
+export function getStaticPaths() {
+  return civs.map(civ => ({
+    params: { slug: civ.id },
+    props: { civ },
+  }));
+}
+
+const { civ } = Astro.props;
+
+// Get related events for this civilization
+const civEvents = events.filter(e => e.civilization === civ.id).slice(0, 8);
+// Get related figures
+const civFigures = figures.filter(f => civ.figures.includes(f.id));
+---
+
+<Layout
+  title={civ.name}
+  description={`Explore the history of ${civ.name}: ${civ.description}`}
+>
+  <article class="civ-detail" style="padding-top: var(--nav-height)">
+
+    <!-- Hero -->
+    <div class="civ-detail-hero" style={`--civ-c: ${civ.color}`}>
+      <div class="civ-hero-mesh" aria-hidden="true">
+        <div class="civ-hero-orb" style={`background: radial-gradient(circle, ${civ.color}30, transparent)`}></div>
+      </div>
+      <div class="container-content civ-hero-inner">
+        <div class="civ-hero-breadcrumb">
+          <a href="/civilizations" class="text-body-sm text-mute hover-link">Civilizations</a>
+          <span class="text-mute" aria-hidden="true">›</span>
+          <span class="text-body-sm text-body">{civ.name}</span>
+        </div>
+
+        <div class="civ-hero-top">
+          <div class="civ-hero-meta">
+            <span class="civ-region-badge text-mono">{civ.region}</span>
+            <span class="civ-era-badge text-mono">{civ.era}</span>
+          </div>
+          <a
+            href={`/timeline#${civ.id}`}
+            class="btn btn-secondary civ-hero-timeline-btn"
+          >
+            View in Timeline →
+          </a>
+        </div>
+
+        <h1 class="text-display-xl civ-hero-title">{civ.name}</h1>
+
+        <p class="text-body-lg civ-hero-desc">{civ.description}</p>
+
+        <div class="civ-stats">
+          <div class="civ-stat">
+            <span class="civ-stat-value text-display-sm" style={`color: ${civ.color}`}>
+              {civ.start < 0 ? `${Math.abs(civ.start).toLocaleString()}` : civ.start}
+            </span>
+            <span class="civ-stat-label text-mono">
+              {civ.start < 0 ? 'years BCE' : 'CE founded'}
+            </span>
+          </div>
+          <div class="civ-stat-div" aria-hidden="true"></div>
+          <div class="civ-stat">
+            <span class="civ-stat-value text-display-sm" style={`color: ${civ.color}`}>
+              {Math.abs(civ.end - civ.start).toLocaleString()}
+            </span>
+            <span class="civ-stat-label text-mono">years of history</span>
+          </div>
+          <div class="civ-stat-div" aria-hidden="true"></div>
+          <div class="civ-stat">
+            <span class="civ-stat-value text-display-sm" style={`color: ${civ.color}`}>
+              {civ.eventCount}
+            </span>
+            <span class="civ-stat-label text-mono">recorded events</span>
+          </div>
+          {civ.capital && (
+            <>
+              <div class="civ-stat-div" aria-hidden="true"></div>
+              <div class="civ-stat">
+                <span class="civ-stat-value" style={`color: ${civ.color}; font-size: 14px; font-weight: 600`}>
+                  {civ.capital.split('/')[0].trim()}
+                </span>
+                <span class="civ-stat-label text-mono">capital city</span>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container-content civ-content section">
+      <div class="civ-layout">
+        <!-- Main content -->
+        <div class="civ-main">
+
+          <!-- Key Facts -->
+          <section class="civ-section" aria-labelledby="key-facts-heading">
+            <h2 id="key-facts-heading" class="civ-section-title text-display-sm">Key Facts</h2>
+            <div class="key-facts-list">
+              {civ.keyFacts.map((fact, i) => (
+                <div class="key-fact" style={`--civ-c: ${civ.color}`}>
+                  <span class="key-fact-num text-mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <p class="key-fact-text text-body-md">{fact}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <!-- Timeline of Events -->
+          {civEvents.length > 0 && (
+            <section class="civ-section" aria-labelledby="civ-events-heading">
+              <h2 id="civ-events-heading" class="civ-section-title text-display-sm">Key Events</h2>
+              <div class="civ-timeline">
+                {civEvents.map(ev => (
+                  <div class="civ-timeline-item" style={`--civ-c: ${civ.color}`}>
+                    <div class="civ-tl-year text-mono">
+                      {ev.year < 0 ? `${Math.abs(ev.year)} BCE` : `${ev.year} CE`}
+                    </div>
+                    <div class="civ-tl-dot" aria-hidden="true"></div>
+                    <div class="civ-tl-body">
+                      <h3 class="civ-tl-title text-body-md">{ev.title}</h3>
+                      <p class="civ-tl-desc text-body-sm">{ev.description}</p>
+                      <div class="civ-tl-layers">
+                        {ev.layer.map(l => (
+                          <span class="civ-tl-layer text-mono">{l}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <!-- Historical Figures -->
+          {civFigures.length > 0 && (
+            <section class="civ-section" aria-labelledby="civ-figures-heading">
+              <h2 id="civ-figures-heading" class="civ-section-title text-display-sm">Key Figures</h2>
+              <div class="civ-figures-grid">
+                {civFigures.map(fig => (
+                  <a href={`/figures/${fig.id}`} class="figure-mini-card" style={`--civ-c: ${civ.color}`}>
+                    <div class="fig-mini-avatar" aria-hidden="true">
+                      {fig.name.charAt(0)}
+                    </div>
+                    <div class="fig-mini-info">
+                      <h3 class="fig-mini-name text-body-sm">{fig.name}</h3>
+                      <p class="fig-mini-role text-mono">{fig.role}</p>
+                      <p class="fig-mini-dates text-mono">
+                        {fig.born < 0 ? `${Math.abs(fig.born)} BCE` : `${fig.born} CE`}
+                        {' – '}
+                        {fig.died < 0 ? `${Math.abs(fig.died)} BCE` : `${fig.died} CE`}
+                      </p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="civ-sidebar" aria-label="Civilization summary">
+          <!-- Info card -->
+          <div class="civ-info-card card" style={`--civ-c: ${civ.color}`}>
+            <div class="civ-info-bar" aria-hidden="true"></div>
+            <h3 class="text-body-sm civ-info-title">Civilization Info</h3>
+            <dl class="civ-info-list">
+              {civ.capital && (
+                <>
+                  <dt class="civ-info-key text-mono">Capital</dt>
+                  <dd class="civ-info-val text-body-sm">{civ.capital}</dd>
+                </>
+              )}
+              <dt class="civ-info-key text-mono">Region</dt>
+              <dd class="civ-info-val text-body-sm">{civ.region}</dd>
+              <dt class="civ-info-key text-mono">Era</dt>
+              <dd class="civ-info-val text-body-sm">{civ.era}</dd>
+              <dt class="civ-info-key text-mono">Period</dt>
+              <dd class="civ-info-val text-body-sm">
+                {civ.start < 0 ? `${Math.abs(civ.start).toLocaleString()} BCE` : `${civ.start} CE`}
+                {' to '}
+                {civ.end < 0 ? `${Math.abs(civ.end).toLocaleString()} BCE` : `${civ.end} CE`}
+              </dd>
+              <dt class="civ-info-key text-mono">Duration</dt>
+              <dd class="civ-info-val text-body-sm">
+                {Math.abs(civ.end - civ.start).toLocaleString()} years
+              </dd>
+            </dl>
+          </div>
+
+          <!-- Related civs -->
+          {civ.relatedCivs.length > 0 && (
+            <div class="civ-related card">
+              <h3 class="text-body-sm civ-info-title">Related Civilizations</h3>
+              <div class="civ-related-list">
+                {civ.relatedCivs.map(relId => (
+                  <a href={`/civilizations/${relId}`} class="civ-related-link text-body-sm">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                      <path d="M2 5h6M5 2l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    {relId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Actions -->
+          <div class="civ-sidebar-actions">
+            <a href={`/timeline#${civ.id}`} class="btn btn-primary civ-action-btn">
+              View in Timeline →
+            </a>
+            <a href="/compare" class="btn btn-secondary civ-action-btn">
+              Compare with another →
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  /* Hero */
+  .civ-detail-hero {
+    position: relative;
+    padding: var(--space-4xl) 0 var(--space-3xl);
+    border-bottom: 1px solid var(--color-border);
+    overflow: hidden;
+  }
+  .civ-hero-mesh {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .civ-hero-orb {
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+  }
+  .civ-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .civ-hero-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 13px;
+    color: var(--color-mute);
+  }
+  .hover-link { text-decoration: none; transition: color var(--transition-fast); }
+  .hover-link:hover { color: var(--color-ink); }
+
+  .civ-hero-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+  .civ-hero-meta {
+    display: flex;
+    gap: var(--space-xs);
+  }
+  .civ-region-badge, .civ-era-badge {
+    font-size: 10px;
+    border-radius: var(--radius-full);
+    padding: 3px 10px;
+    border: 1px solid;
+  }
+  .civ-region-badge {
+    color: var(--civ-c);
+    background: color-mix(in srgb, var(--civ-c) 10%, transparent);
+    border-color: color-mix(in srgb, var(--civ-c) 25%, transparent);
+  }
+  .civ-era-badge {
+    color: var(--color-mute);
+    background: var(--color-bg-hover);
+    border-color: var(--color-border);
+  }
+
+  .civ-hero-timeline-btn {
+    height: 32px;
+    padding: 0 var(--space-sm);
+    font-size: 12px;
+    border-radius: var(--radius-sm);
+  }
+
+  .civ-hero-title {
+    font-size: clamp(32px, 5vw, 56px);
+    letter-spacing: -2px;
+    line-height: 1;
+    max-width: 700px;
+  }
+  .civ-hero-desc {
+    color: var(--color-body);
+    max-width: 560px;
+    line-height: 1.6;
+  }
+
+  /* Stats */
+  .civ-stats {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
+  }
+  .civ-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .civ-stat-value { font-weight: 600; letter-spacing: -0.5px; }
+  .civ-stat-label { font-size: 10px; color: var(--color-mute); text-transform: uppercase; letter-spacing: 0.05em; }
+  .civ-stat-div { width: 1px; height: 32px; background: var(--color-border); }
+
+  /* Layout */
+  .civ-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: var(--space-3xl);
+    align-items: start;
+  }
+
+  /* Sections */
+  .civ-section { display: flex; flex-direction: column; gap: var(--space-lg); }
+  .civ-main { display: flex; flex-direction: column; gap: var(--space-3xl); }
+  .civ-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* Key facts */
+  .key-facts-list { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .key-fact {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    border-left: 3px solid var(--civ-c, var(--color-border));
+    transition: var(--transition-fast);
+  }
+  .key-fact:hover { border-color: var(--civ-c, var(--color-border-strong)); }
+  .key-fact-num { font-size: 11px; color: var(--civ-c); min-width: 24px; flex-shrink: 0; }
+  .key-fact-text { line-height: 1.5; }
+
+  /* Civ timeline */
+  .civ-timeline { display: flex; flex-direction: column; position: relative; }
+  .civ-timeline::before {
+    content: '';
+    position: absolute;
+    left: 68px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--color-border);
+  }
+  .civ-timeline-item {
+    display: grid;
+    grid-template-columns: 64px 12px 1fr;
+    gap: var(--space-md);
+    align-items: flex-start;
+    padding-block: var(--space-sm);
+  }
+  .civ-tl-year {
+    font-size: 10px;
+    color: var(--civ-c, var(--color-mute));
+    text-align: right;
+    padding-top: 2px;
+    line-height: 1.2;
+  }
+  .civ-tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    background: var(--civ-c, var(--color-border));
+    border: 2px solid var(--color-bg);
+    box-shadow: 0 0 6px var(--civ-c, transparent);
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .civ-tl-body { display: flex; flex-direction: column; gap: 4px; }
+  .civ-tl-title { font-weight: 600; font-size: 15px; letter-spacing: -0.2px; }
+  .civ-tl-desc { color: var(--color-body); font-size: 13px; line-height: 1.5; }
+  .civ-tl-layers { display: flex; gap: 4px; flex-wrap: wrap; }
+  .civ-tl-layer {
+    font-size: 9px; color: var(--color-mute);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 1px 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  /* Figures grid */
+  .civ-figures-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-sm); }
+  .figure-mini-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-fast);
+  }
+  .figure-mini-card:hover {
+    border-color: var(--civ-c, var(--color-border-strong));
+    transform: translateY(-1px);
+  }
+  .fig-mini-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--civ-c, #007cf0), var(--color-bg-hover));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--color-bg);
+    flex-shrink: 0;
+  }
+  .fig-mini-info { display: flex; flex-direction: column; gap: 2px; }
+  .fig-mini-name { font-weight: 600; font-size: 13px; }
+  .fig-mini-role { font-size: 10px; color: var(--civ-c, var(--color-link)); }
+  .fig-mini-dates { font-size: 9px; color: var(--color-mute); }
+
+  /* Sidebar */
+  .civ-sidebar {
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-lg));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .civ-info-card {
+    padding: 0;
+    overflow: hidden;
+  }
+  .civ-info-bar { height: 3px; background: var(--civ-c); width: 100%; }
+  .civ-info-title {
+    padding: var(--space-sm) var(--space-md) var(--space-xs);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .civ-info-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px var(--space-md);
+    padding: 0 var(--space-md) var(--space-md);
+  }
+  .civ-info-key { font-size: 10px; color: var(--color-mute); text-transform: uppercase; letter-spacing: 0.05em; padding-top: 1px; }
+  .civ-info-val { font-size: 13px; color: var(--color-body); line-height: 1.4; }
+
+  .civ-related { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .civ-related-list { display: flex; flex-direction: column; gap: 2px; }
+  .civ-related-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px var(--space-xs);
+    border-radius: var(--radius-xs);
+    text-decoration: none;
+    color: var(--color-body);
+    font-size: 13px;
+    transition: var(--transition-fast);
+  }
+  .civ-related-link:hover { background: var(--color-bg-hover); color: var(--color-ink); }
+
+  .civ-sidebar-actions { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .civ-action-btn { width: 100%; justify-content: center; height: 40px; font-size: 13px; border-radius: var(--radius-sm); }
+
+  @media (max-width: 959px) {
+    .civ-layout { grid-template-columns: 1fr; }
+    .civ-sidebar { position: static; }
+    .civ-figures-grid { grid-template-columns: 1fr; }
+  }
+</style>

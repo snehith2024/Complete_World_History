@@ -1,0 +1,290 @@
+---
+// On This Day Preview - shows events for today's date
+const today = new Date();
+const month = today.getMonth() + 1;
+const day = today.getDate();
+
+const todayFormatted = today.toLocaleDateString('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+});
+
+// Sample events for demo — in production these would come from data
+const todayEvents = [
+  {
+    year: -44,
+    type: 'death',
+    title: 'Julius Caesar assassinated',
+    description: 'On the Ides of March, Julius Caesar was stabbed 23 times in the Roman Senate.',
+    era: 'classical',
+    color: '#ff4d4d',
+    link: '/figures/julius-caesar',
+  },
+  {
+    year: 1969,
+    type: 'discovery',
+    title: 'Apollo 11 begins lunar orbit',
+    description: 'The Apollo 11 spacecraft entered lunar orbit in preparation for the Moon landing.',
+    era: 'modern',
+    color: '#007cf0',
+    link: '/timeline#moon-landing',
+  },
+  {
+    year: 1215,
+    type: 'event',
+    title: 'Magna Carta principles established',
+    description: 'The foundations of constitutional governance and rule of law were being shaped in England.',
+    era: 'medieval',
+    color: '#7928ca',
+    link: '/timeline#magna-carta',
+  },
+  {
+    year: 1564,
+    type: 'birth',
+    title: 'William Shakespeare born',
+    description: 'The world\'s greatest playwright and poet was born in Stratford-upon-Avon, England.',
+    era: 'early-modern',
+    color: '#f5a623',
+    link: '/figures',
+  },
+];
+
+const eventTypeIcons = {
+  birth: '👶',
+  death: '✝',
+  event: '⚡',
+  discovery: '🔭',
+  war: '⚔️',
+};
+---
+
+<section class="otd-section section-sm" aria-labelledby="otd-heading">
+  <div class="container">
+    <div class="otd-inner">
+      <!-- Left: Header -->
+      <div class="otd-header">
+        <p class="eyebrow">On this day</p>
+        <h2 id="otd-heading" class="text-display-md otd-title">
+          {todayFormatted}
+        </h2>
+        <p class="text-body-sm text-body otd-subtitle">
+          Historical events that happened on this date across time.
+        </p>
+        <div class="otd-actions">
+          <a href="/on-this-day" class="btn btn-secondary otd-btn" id="otd-view-all-btn">
+            View all events
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Type filters -->
+        <div class="otd-filters" role="group" aria-label="Filter by event type">
+          {['All', 'Birth', 'Death', 'Event', 'Discovery'].map((type, i) => (
+            <button
+              class={`otd-filter-btn ${i === 0 ? 'active' : ''}`}
+              data-type={type.toLowerCase()}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+            >
+              {type}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Right: Event cards -->
+      <div class="otd-events" id="otd-events-list" aria-live="polite">
+        {todayEvents.map((event, i) => (
+          <a
+            href={event.link}
+            class="otd-event-card animate-fade-in"
+            style={`animation-delay: ${i * 80}ms`}
+            aria-label={`${event.title} — ${event.year < 0 ? Math.abs(event.year) + ' BCE' : event.year + ' CE'}`}
+          >
+            <div class="otd-event-year-col">
+              <span class="otd-event-icon" aria-hidden="true">
+                {eventTypeIcons[event.type as keyof typeof eventTypeIcons] ?? '•'}
+              </span>
+              <div class="otd-event-year-wrap">
+                <span class="otd-event-year text-mono" style={`color: ${event.color}`}>
+                  {event.year < 0 ? `${Math.abs(event.year)} BCE` : `${event.year} CE`}
+                </span>
+                <span class="otd-event-type text-mono">{event.type}</span>
+              </div>
+            </div>
+            <div class="otd-event-body">
+              <h3 class="otd-event-title text-body-md">{event.title}</h3>
+              <p class="otd-event-desc text-body-sm">{event.description}</p>
+            </div>
+            <svg class="otd-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+              <path d="M2 7h10M8 4l3 3-3 3" stroke={event.color} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .otd-section {
+    background: var(--color-bg-soft);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .otd-inner {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: var(--space-4xl);
+    align-items: start;
+  }
+
+  .otd-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-lg));
+  }
+
+  .otd-title {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+  .otd-subtitle { line-height: 1.6; }
+
+  .otd-btn {
+    height: 36px;
+    padding: 0 var(--space-sm);
+    font-size: var(--text-body-sm);
+    border-radius: var(--radius-sm);
+    gap: 6px;
+    width: fit-content;
+  }
+
+  .otd-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .otd-filter-btn {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--color-body);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 3px var(--space-xs);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+  .otd-filter-btn:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-ink);
+  }
+  .otd-filter-btn.active {
+    background: var(--color-ink);
+    color: var(--color-bg);
+    border-color: var(--color-ink);
+  }
+
+  /* Event cards */
+  .otd-events {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .otd-event-card {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-1);
+  }
+  .otd-event-card:hover {
+    box-shadow: var(--shadow-2);
+    border-color: var(--color-border-strong);
+    transform: translateX(4px);
+  }
+  .otd-event-card:hover .otd-arrow {
+    transform: translateX(4px);
+  }
+
+  .otd-event-year-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 80px;
+    text-align: center;
+  }
+  .otd-event-icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+  .otd-event-year-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+  }
+  .otd-event-year {
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .otd-event-type {
+    font-size: 9px;
+    color: var(--color-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .otd-event-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .otd-event-title {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.3px;
+    line-height: 1.3;
+  }
+  .otd-event-desc {
+    color: var(--color-body);
+    font-size: 13px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .otd-arrow {
+    flex-shrink: 0;
+    transition: transform var(--transition-fast);
+    margin-top: 2px;
+  }
+
+  /* Responsive */
+  @media (max-width: 959px) {
+    .otd-inner { grid-template-columns: 1fr; gap: var(--space-xl); }
+    .otd-header { position: static; flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+    .otd-title { width: 100%; }
+  }
+  @media (max-width: 599px) {
+    .otd-header { flex-direction: column; }
+  }
+</style>

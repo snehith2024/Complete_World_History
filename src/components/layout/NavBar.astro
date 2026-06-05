@@ -1,0 +1,494 @@
+---
+const navLinks = [
+  { href: '/timeline', label: 'Timeline' },
+  { href: '/map', label: 'Map' },
+  { href: '/civilizations', label: 'Civilizations' },
+  { href: '/figures', label: 'Figures' },
+  { href: '/knowledge-graph', label: 'Knowledge Graph' },
+  { href: '/compare', label: 'Compare' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="nav-bar" id="nav-bar" role="banner">
+  <div class="nav-inner container">
+    <!-- Logo -->
+    <a href="/" class="nav-logo" aria-label="Complete World History — Home">
+      <div class="logo-icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <circle cx="14" cy="14" r="13" stroke="url(#logo-gradient)" stroke-width="1.5"/>
+          <!-- Latitude lines -->
+          <ellipse cx="14" cy="14" rx="13" ry="5" stroke="url(#logo-gradient)" stroke-width="1" opacity="0.5"/>
+          <line x1="1" y1="14" x2="27" y2="14" stroke="url(#logo-gradient)" stroke-width="1" opacity="0.5"/>
+          <line x1="14" y1="1" x2="14" y2="27" stroke="url(#logo-gradient)" stroke-width="1" opacity="0.5"/>
+          <!-- Timeline dot -->
+          <circle cx="14" cy="14" r="2.5" fill="url(#logo-gradient)"/>
+          <defs>
+            <linearGradient id="logo-gradient" x1="0" y1="0" x2="28" y2="28">
+              <stop offset="0%" stop-color="#007cf0"/>
+              <stop offset="50%" stop-color="#00dfd8"/>
+              <stop offset="100%" stop-color="#7928ca"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <span class="logo-text">
+        <span class="logo-title">Complete World</span>
+        <span class="logo-sub text-mono">History</span>
+      </span>
+    </a>
+
+    <!-- Desktop Nav Links -->
+    <nav class="nav-links" aria-label="Main navigation">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class={`nav-link ${currentPath.startsWith(link.href) ? 'active' : ''}`}
+          aria-current={currentPath.startsWith(link.href) ? 'page' : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- Right Actions -->
+    <div class="nav-actions">
+      <!-- Search trigger -->
+      <button
+        class="btn-search"
+        id="nav-search-trigger"
+        aria-label="Search history (Ctrl+K)"
+        title="Search (Ctrl+K)"
+      >
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M11 11L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <span class="search-hint text-mono">⌘K</span>
+      </button>
+
+      <!-- On This Day -->
+      <a href="/on-this-day" class="btn btn-ghost nav-action-link">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="1" y="3" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M5 1v4M11 1v4M1 7h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Today
+      </a>
+
+      <!-- Explore CTA -->
+      <a href="/timeline" class="btn btn-primary nav-cta">
+        Explore Timeline
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+
+      <!-- Mobile menu toggle -->
+      <button
+        class="btn-icon mobile-menu-btn"
+        id="mobile-menu-btn"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu glass" id="mobile-menu" aria-hidden="true">
+    <nav aria-label="Mobile navigation">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class={`mobile-nav-link ${currentPath.startsWith(link.href) ? 'active' : ''}`}
+        >
+          {link.label}
+        </a>
+      ))}
+      <div class="mobile-nav-divider divider"></div>
+      <a href="/on-this-day" class="mobile-nav-link">On This Day</a>
+      <a href="/search" class="mobile-nav-link">Search</a>
+    </nav>
+    <a href="/timeline" class="btn btn-primary mobile-cta">Explore Timeline</a>
+  </div>
+</header>
+
+<!-- Global Search Modal -->
+<div class="search-modal" id="search-modal" aria-modal="true" role="dialog" aria-label="Search" aria-hidden="true">
+  <div class="search-backdrop" id="search-backdrop"></div>
+  <div class="search-dialog glass">
+    <div class="search-input-wrapper">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" class="search-icon" aria-hidden="true">
+        <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M11 11L15 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input
+        type="search"
+        id="global-search-input"
+        class="search-input-field"
+        placeholder="Search history... e.g. 'What happened in 500 BCE?'"
+        autocomplete="off"
+        aria-label="Search world history"
+      />
+      <span class="search-esc text-mono">ESC</span>
+    </div>
+    <div class="search-suggestions" id="search-suggestions">
+      <p class="search-suggestions-label eyebrow">Try asking</p>
+      <div class="suggestion-chips">
+        <button class="suggestion-chip" data-query="What happened in 500 BCE?">What happened in 500 BCE?</button>
+        <button class="suggestion-chip" data-query="Show all Roman Empire events">Roman Empire events</button>
+        <button class="suggestion-chip" data-query="Wars between 1000 and 1500 CE">Wars 1000–1500 CE</button>
+        <button class="suggestion-chip" data-query="Ancient India vs Ancient Greece">India vs Greece</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: var(--nav-height);
+    background: rgba(10, 10, 10, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-border);
+    transition: background var(--transition-normal), border-color var(--transition-normal);
+  }
+
+  .nav-bar.scrolled {
+    background: rgba(10, 10, 10, 0.95);
+    border-color: var(--color-border-strong);
+  }
+
+  .nav-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
+  }
+
+  /* Logo */
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .logo-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-ink);
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+  .logo-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-mute);
+    line-height: 1;
+  }
+
+  /* Nav links */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+    justify-content: center;
+  }
+  .nav-link {
+    font-size: var(--text-body-sm);
+    font-weight: 400;
+    color: var(--color-body);
+    padding: 6px var(--space-sm);
+    border-radius: var(--radius-full);
+    transition: var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .nav-link:hover {
+    color: var(--color-ink);
+    background: var(--color-bg-hover);
+  }
+  .nav-link.active {
+    color: var(--color-ink);
+    background: var(--color-bg-card);
+  }
+
+  /* Actions */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    flex-shrink: 0;
+  }
+
+  .btn-search {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    height: 32px;
+    padding: 0 var(--space-sm);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-body);
+    font-size: var(--text-body-sm);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-family: var(--font-sans);
+  }
+  .btn-search:hover {
+    border-color: var(--color-border-strong);
+    color: var(--color-ink);
+  }
+  .search-hint {
+    font-size: 10px;
+    color: var(--color-mute);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 1px 4px;
+  }
+
+  .nav-action-link {
+    font-size: var(--text-body-sm);
+    padding: 6px var(--space-sm);
+    gap: 6px;
+  }
+
+  .nav-cta {
+    height: 32px;
+    padding: 0 var(--space-sm);
+    font-size: var(--text-body-sm);
+    border-radius: var(--radius-sm);
+    gap: 6px;
+  }
+
+  /* Mobile */
+  .mobile-menu-btn {
+    display: none;
+  }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: var(--nav-height);
+    left: 0;
+    right: 0;
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    flex-direction: column;
+    gap: var(--space-xxs);
+    z-index: 999;
+  }
+  .mobile-menu[aria-hidden="false"] {
+    display: flex;
+  }
+  .mobile-nav-link {
+    display: block;
+    padding: var(--space-xs) var(--space-sm);
+    color: var(--color-body);
+    font-size: var(--text-body-md);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: var(--transition-fast);
+  }
+  .mobile-nav-link:hover,
+  .mobile-nav-link.active {
+    background: var(--color-bg-hover);
+    color: var(--color-ink);
+  }
+  .mobile-nav-divider {
+    margin: var(--space-xs) 0;
+  }
+  .mobile-cta {
+    margin-top: var(--space-sm);
+    width: 100%;
+    height: 44px;
+    border-radius: var(--radius-md);
+    font-size: var(--text-body-md);
+    justify-content: center;
+  }
+
+  /* Search Modal */
+  .search-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 80px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+  }
+  .search-modal[aria-hidden="false"] {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .search-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    cursor: pointer;
+  }
+  .search-dialog {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin-inline: var(--space-md);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-modal);
+    transform: translateY(-8px);
+    transition: transform var(--transition-normal);
+  }
+  .search-modal[aria-hidden="false"] .search-dialog {
+    transform: translateY(0);
+  }
+  .search-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .search-icon {
+    color: var(--color-mute);
+    flex-shrink: 0;
+  }
+  .search-input-field {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-md);
+    color: var(--color-ink);
+  }
+  .search-input-field::placeholder { color: var(--color-mute); }
+  .search-esc {
+    font-size: 10px;
+    color: var(--color-mute);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 2px 5px;
+    flex-shrink: 0;
+  }
+  .search-suggestions {
+    padding: var(--space-md);
+  }
+  .search-suggestions-label {
+    margin-bottom: var(--space-sm);
+  }
+  .suggestion-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+  .suggestion-chip {
+    font-size: var(--text-body-sm);
+    color: var(--color-body);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 4px var(--space-sm);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-family: var(--font-sans);
+  }
+  .suggestion-chip:hover {
+    background: var(--color-bg-card-2);
+    color: var(--color-ink);
+    border-color: var(--color-border-strong);
+  }
+
+  /* Responsive */
+  @media (max-width: 959px) {
+    .nav-links { display: none; }
+    .nav-action-link { display: none; }
+    .btn-search .search-hint { display: none; }
+    .mobile-menu-btn { display: flex; }
+  }
+
+  @media (max-width: 599px) {
+    .nav-cta { display: none; }
+  }
+</style>
+
+<script>
+  // Scroll effect
+  const navBar = document.getElementById('nav-bar');
+  window.addEventListener('scroll', () => {
+    navBar?.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Mobile menu
+  const mobileBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  mobileBtn?.addEventListener('click', () => {
+    const isOpen = mobileMenu?.getAttribute('aria-hidden') === 'false';
+    mobileMenu?.setAttribute('aria-hidden', String(isOpen));
+    mobileBtn.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  // Search modal
+  const searchTrigger = document.getElementById('nav-search-trigger');
+  const searchModal = document.getElementById('search-modal');
+  const searchBackdrop = document.getElementById('search-backdrop');
+  const searchInput = document.getElementById('global-search-input') as HTMLInputElement;
+
+  function openSearch() {
+    searchModal?.setAttribute('aria-hidden', 'false');
+    setTimeout(() => searchInput?.focus(), 100);
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSearch() {
+    searchModal?.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  searchTrigger?.addEventListener('click', openSearch);
+  searchBackdrop?.addEventListener('click', closeSearch);
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+      e.preventDefault();
+      openSearch();
+    }
+    if (e.key === 'Escape') closeSearch();
+  });
+
+  // Suggestion chips
+  document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const query = (chip as HTMLElement).dataset.query ?? '';
+      if (searchInput) searchInput.value = query;
+      window.location.href = `/search?q=${encodeURIComponent(query)}`;
+    });
+  });
+
+  // Search submit
+  searchInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchInput.value.trim()) {
+      window.location.href = `/search?q=${encodeURIComponent(searchInput.value.trim())}`;
+    }
+  });
+</script>

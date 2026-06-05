@@ -1,0 +1,301 @@
+---
+// Event detail panel — slides in from right
+---
+
+<aside
+  class="event-panel glass"
+  id="event-panel"
+  aria-hidden="true"
+  role="complementary"
+  aria-label="Event details"
+>
+  <div class="event-panel-header">
+    <div class="event-panel-meta" id="ep-meta">
+      <span class="ep-era text-mono" id="ep-era">Classical Era</span>
+      <span class="ep-layer text-mono" id="ep-layer">Political</span>
+    </div>
+    <button class="ep-close btn-icon" id="ep-close-btn" aria-label="Close event panel">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="event-panel-content">
+    <!-- Year badge -->
+    <div class="ep-year-badge text-mono" id="ep-year-badge">
+      <div class="ep-year-dot" id="ep-year-dot" aria-hidden="true"></div>
+      <span id="ep-year-text">44 BCE</span>
+    </div>
+
+    <!-- Title -->
+    <h2 class="ep-title text-display-md" id="ep-title">
+      Julius Caesar Assassinated
+    </h2>
+
+    <!-- Description -->
+    <p class="ep-desc text-body-sm" id="ep-desc">
+      On the Ides of March, Julius Caesar was stabbed 23 times in the Theatre of Pompey by a group of senators including Brutus and Cassius, ending his dictatorship and triggering civil war.
+    </p>
+
+    <!-- Significance -->
+    <div class="ep-significance" id="ep-significance">
+      <p class="eyebrow ep-sig-label">Historical Significance</p>
+      <p class="ep-sig-text text-body-sm" id="ep-sig-text">
+        Ended the Roman Republic and began transition to the Roman Empire.
+      </p>
+    </div>
+
+    <!-- Actions -->
+    <div class="ep-actions">
+      <a href="#" class="btn btn-secondary ep-btn" id="ep-learn-btn">
+        View full article
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <button class="btn btn-ghost ep-btn" id="ep-graph-btn" aria-label="Show in knowledge graph">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <circle cx="3" cy="3" r="2" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="9" cy="3" r="2" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M4.5 4.5l3 3M7.5 3.5l-3 0" stroke="currentColor" stroke-width="1"/>
+        </svg>
+        Knowledge Graph
+      </button>
+    </div>
+
+    <!-- Related events -->
+    <div class="ep-related" id="ep-related">
+      <p class="eyebrow ep-related-label">Related Events</p>
+      <div class="ep-related-list" id="ep-related-list">
+        <a href="#" class="ep-related-item">
+          <span class="ep-related-year text-mono">-49 BCE</span>
+          <span class="ep-related-title text-body-sm">Caesar Crosses the Rubicon</span>
+        </a>
+        <a href="#" class="ep-related-item">
+          <span class="ep-related-year text-mono">-27 BCE</span>
+          <span class="ep-related-title text-body-sm">Roman Empire Founded</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .event-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--color-border);
+    z-index: 200;
+    transform: translateX(100%);
+    transition: transform var(--transition-normal);
+    box-shadow: var(--shadow-modal);
+    overflow: hidden;
+  }
+  .event-panel[aria-hidden="false"] {
+    transform: translateX(0);
+  }
+
+  .event-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+  }
+  .event-panel-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  .ep-era {
+    font-size: 10px;
+    color: var(--color-mute);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+  }
+  .ep-layer {
+    font-size: 10px;
+    color: var(--color-link);
+    background: rgba(0, 124, 240, 0.1);
+    border: 1px solid rgba(0, 124, 240, 0.25);
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+  }
+  .ep-close {
+    width: 24px;
+    height: 24px;
+  }
+
+  .event-panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .ep-year-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 12px;
+    color: var(--color-ink);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 4px 12px;
+    width: fit-content;
+  }
+  .ep-year-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--color-link);
+    box-shadow: 0 0 6px var(--color-link);
+  }
+
+  .ep-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .ep-desc {
+    color: var(--color-body);
+    line-height: 1.7;
+    font-size: 13px;
+  }
+
+  .ep-significance {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ep-sig-label { color: var(--color-mute); }
+  .ep-sig-text {
+    color: var(--color-body);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .ep-actions {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+  }
+  .ep-btn {
+    height: 32px;
+    padding: 0 var(--space-sm);
+    font-size: 12px;
+    border-radius: var(--radius-sm);
+    gap: 5px;
+  }
+
+  .ep-related {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .ep-related-label { color: var(--color-mute); }
+  .ep-related-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ep-related-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 8px var(--space-xs);
+    border-radius: var(--radius-xs);
+    text-decoration: none;
+    color: inherit;
+    transition: background var(--transition-fast);
+  }
+  .ep-related-item:hover { background: var(--color-bg-hover); }
+  .ep-related-year {
+    font-size: 10px;
+    color: var(--color-mute);
+    min-width: 64px;
+    flex-shrink: 0;
+  }
+  .ep-related-title {
+    font-size: 13px;
+    color: var(--color-body);
+  }
+  .ep-related-item:hover .ep-related-title { color: var(--color-ink); }
+
+  @media (max-width: 599px) {
+    .event-panel {
+      width: 100%;
+      top: auto;
+      height: 70vh;
+      border-top: 1px solid var(--color-border);
+      border-left: none;
+      transform: translateY(100%);
+    }
+    .event-panel[aria-hidden="false"] {
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  const panel = document.getElementById('event-panel');
+  const closeBtn = document.getElementById('ep-close-btn');
+
+  closeBtn?.addEventListener('click', () => {
+    panel?.setAttribute('aria-hidden', 'true');
+  });
+
+  // Listen for event selection from timeline
+  document.addEventListener('timeline:event-selected', ((e: CustomEvent) => {
+    const ev = e.detail;
+    if (!ev) return;
+
+    // Populate panel
+    const yearText = ev.year < 0 ? `${Math.abs(ev.year)} BCE` : `${ev.year} CE`;
+    const yearEl = document.getElementById('ep-year-text');
+    if (yearEl) yearEl.textContent = yearText;
+
+    const titleEl = document.getElementById('ep-title');
+    if (titleEl) titleEl.textContent = ev.title ?? '';
+
+    const descEl = document.getElementById('ep-desc');
+    if (descEl) descEl.textContent = ev.description ?? `${ev.title} — a pivotal moment in world history that shaped the course of civilization.`;
+
+    const dotEl = document.getElementById('ep-year-dot');
+    if (dotEl) {
+      dotEl.style.background = ev.color ?? '#007cf0';
+      dotEl.style.boxShadow = `0 0 6px ${ev.color ?? '#007cf0'}`;
+    }
+
+    const eraEl = document.getElementById('ep-era');
+    if (eraEl) eraEl.textContent = ev.era ?? 'Historical Era';
+
+    const layerEl = document.getElementById('ep-layer');
+    if (layerEl) layerEl.textContent = ev.layer ?? 'Historical Event';
+
+    const sigEl = document.getElementById('ep-sig-text');
+    if (sigEl) sigEl.textContent = ev.significance ?? 'A significant moment in world history.';
+
+    // Open panel
+    panel?.setAttribute('aria-hidden', 'false');
+  }) as EventListener);
+</script>

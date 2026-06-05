@@ -1,0 +1,651 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import civs from '../../data/civilizations.json';
+import figures from '../../data/figures.json';
+import events from '../../data/events.json';
+---
+
+<Layout
+  title="Knowledge Graph"
+  description="Explore history as a knowledge graph. Discover hidden connections between civilizations, figures, events, and ideas across time."
+  fullscreen={true}
+>
+  <div class="graph-app">
+    <!-- Header -->
+    <div class="graph-header glass">
+      <div class="graph-header-left">
+        <a href="/" class="graph-home-link" aria-label="Back to home">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <div>
+          <h1 class="graph-title text-display-sm">Knowledge Graph</h1>
+          <p class="graph-subtitle text-mono">History's hidden connections</p>
+        </div>
+      </div>
+
+      <div class="graph-controls">
+        <!-- Filter by type -->
+        <div class="graph-type-filters" role="group" aria-label="Filter by node type">
+          {[
+            { id: 'all', label: 'All', color: 'var(--color-ink)' },
+            { id: 'civilization', label: 'Civilizations', color: '#f5a623' },
+            { id: 'figure', label: 'Figures', color: '#007cf0' },
+            { id: 'event', label: 'Events', color: '#ff4d4d' },
+          ].map((t, i) => (
+            <button
+              class={`graph-type-btn text-mono ${i === 0 ? 'active' : ''}`}
+              data-type={t.id}
+              style={`--tc: ${t.color}`}
+              aria-pressed={i === 0 ? 'true' : 'false'}
+            >
+              <span class="graph-type-dot" aria-hidden="true"></span>
+              {t.label}
+            </button>
+          ))}
+        </div>
+
+        <!-- Search node -->
+        <input
+          type="search"
+          id="graph-search"
+          class="graph-search-input"
+          placeholder="Find a node..."
+          aria-label="Search knowledge graph nodes"
+        />
+
+        <!-- Reset zoom -->
+        <button class="btn btn-ghost graph-reset-btn" id="graph-reset-btn" aria-label="Reset zoom">
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <!-- Graph canvas -->
+    <div
+      class="graph-canvas-wrapper"
+      id="graph-canvas-wrapper"
+      data-civs={JSON.stringify(civs)}
+      data-figures={JSON.stringify(figures)}
+      data-events={JSON.stringify(events)}
+    >
+      <svg id="graph-svg" class="graph-svg" role="img" aria-label="History knowledge graph"></svg>
+
+      <!-- Loading -->
+      <div class="graph-loading" id="graph-loading" aria-live="polite">
+        <div class="loading-orb"></div>
+        <p class="text-mono">Building knowledge graph...</p>
+      </div>
+
+      <!-- Node detail popup -->
+      <div class="graph-popup glass" id="graph-popup" aria-hidden="true">
+        <button class="graph-popup-close btn-icon" id="graph-popup-close" aria-label="Close">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+            <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="graph-popup-type text-mono" id="popup-type">Civilization</div>
+        <h2 class="graph-popup-title text-display-sm" id="popup-title">Roman Empire</h2>
+        <p class="graph-popup-desc text-body-sm" id="popup-desc">
+          One of history's greatest civilizations, spanning 500 years and three continents.
+        </p>
+        <div class="graph-popup-connections text-mono" id="popup-connections">
+          12 connections
+        </div>
+        <a class="graph-popup-link btn btn-secondary" id="popup-link" href="#">
+          Explore →
+        </a>
+      </div>
+
+      <!-- Help -->
+      <div class="graph-help text-mono" aria-label="Graph interaction help">
+        <span>Scroll: zoom</span>
+        <span>Drag: pan</span>
+        <span>Click: details</span>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .graph-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: var(--color-bg);
+  }
+
+  .graph-header {
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+    gap: var(--space-md);
+    z-index: 100;
+  }
+  .graph-header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+  }
+  .graph-home-link {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--color-body);
+    transition: var(--transition-fast);
+  }
+  .graph-home-link:hover { background: var(--color-bg-hover); color: var(--color-ink); }
+
+  .graph-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+  .graph-subtitle {
+    font-size: 10px;
+    color: var(--color-mute);
+  }
+
+  .graph-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex: 1;
+    justify-content: flex-end;
+  }
+  .graph-type-filters { display: flex; gap: 2px; }
+  .graph-type-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 26px;
+    padding: 0 8px;
+    font-size: 11px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    color: var(--color-body);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+  .graph-type-btn:hover { color: var(--color-ink); border-color: var(--color-border-strong); }
+  .graph-type-btn.active {
+    background: var(--color-bg-hover);
+    color: var(--color-ink);
+    border-color: var(--color-border-strong);
+  }
+  .graph-type-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: var(--radius-full);
+    background: var(--tc, var(--color-body));
+    flex-shrink: 0;
+  }
+
+  .graph-search-input {
+    height: 28px;
+    width: 160px;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0 var(--space-xs);
+    font-family: var(--font-sans);
+    font-size: 12px;
+    color: var(--color-ink);
+    outline: none;
+  }
+  .graph-search-input::placeholder { color: var(--color-mute); }
+  .graph-search-input:focus { border-color: var(--color-border-focus); }
+
+  .graph-reset-btn {
+    height: 28px;
+    font-size: 12px;
+    padding: 0 var(--space-sm);
+  }
+
+  /* Canvas */
+  .graph-canvas-wrapper {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .graph-svg {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+    display: block;
+  }
+  .graph-svg:active { cursor: grabbing; }
+
+  /* Loading */
+  .graph-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    background: var(--color-bg);
+    z-index: 10;
+    transition: opacity var(--transition-normal);
+  }
+  .graph-loading.hidden { opacity: 0; pointer-events: none; }
+
+  /* Popup */
+  .graph-popup {
+    position: absolute;
+    top: var(--space-lg);
+    right: var(--space-lg);
+    width: 260px;
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    box-shadow: var(--shadow-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    transition: opacity var(--transition-fast), transform var(--transition-fast);
+    transform: translateY(-4px);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .graph-popup[aria-hidden="false"] {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+  }
+  .graph-popup-close {
+    position: absolute;
+    top: var(--space-xs);
+    right: var(--space-xs);
+    width: 22px;
+    height: 22px;
+  }
+  .graph-popup-type {
+    font-size: 10px;
+    color: var(--color-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .graph-popup-title {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    line-height: 1.2;
+    padding-right: var(--space-lg);
+  }
+  .graph-popup-desc {
+    color: var(--color-body);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .graph-popup-connections {
+    font-size: 10px;
+    color: var(--color-link);
+    border: 1px solid rgba(0,124,240,0.25);
+    background: rgba(0,124,240,0.08);
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+    width: fit-content;
+  }
+  .graph-popup-link {
+    height: 30px;
+    padding: 0 var(--space-sm);
+    font-size: 12px;
+    border-radius: var(--radius-sm);
+    width: fit-content;
+  }
+
+  /* Help */
+  .graph-help {
+    position: absolute;
+    bottom: var(--space-md);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--space-md);
+    font-size: 10px;
+    color: var(--color-mute);
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 4px var(--space-sm);
+    pointer-events: none;
+  }
+
+  @media (max-width: 599px) {
+    .graph-type-filters { display: none; }
+    .graph-controls { gap: var(--space-xs); }
+  }
+</style>
+
+<script>
+  async function initGraph() {
+    const d3 = await import('d3');
+
+    const wrapper = document.getElementById('graph-canvas-wrapper');
+    const svg = d3.select('#graph-svg');
+    const loading = document.getElementById('graph-loading');
+    const popup = document.getElementById('graph-popup');
+
+    if (!wrapper) return;
+
+    const W = wrapper.clientWidth ?? 800;
+    const H = wrapper.clientHeight ?? 600;
+
+    svg.attr('width', W).attr('height', H);
+
+    // ============================================================
+    // GRAPH DATA GENERATION FROM DATASETS
+    // ============================================================
+    const civs = JSON.parse(wrapper.dataset.civs || '[]');
+    const figures = JSON.parse(wrapper.dataset.figures || '[]');
+    const events = JSON.parse(wrapper.dataset.events || '[]');
+
+    const nodes: any[] = [];
+    const links: any[] = [];
+
+    // 1. Add Civilization Nodes
+    civs.forEach((c: any) => {
+      nodes.push({
+        id: c.id,
+        label: c.name,
+        type: 'civilization',
+        color: c.color || '#f5a623',
+        size: 22,
+        description: c.description || `${c.name} civilization.`
+      });
+    });
+
+    // 2. Add Figures Nodes & figure-to-civ links
+    figures.forEach((f: any) => {
+      nodes.push({
+        id: f.id,
+        label: f.name,
+        type: 'figure',
+        color: '#007cf0',
+        size: 15,
+        description: f.significance || `${f.name} — prominent historical figure.`
+      });
+
+      if (f.civilization && civs.some((c: any) => c.id === f.civilization)) {
+        links.push({ source: f.id, target: f.civilization, strength: 0.95 });
+      }
+
+      // Add figure-to-figure links (relationships)
+      if (f.relationships) {
+        f.relationships.forEach((rel: any) => {
+          if (figures.some((fig: any) => fig.id === rel.person)) {
+            links.push({ source: f.id, target: rel.person, strength: 0.6 });
+          }
+        });
+      }
+    });
+
+    // 3. Add Events Nodes & links to civs and figures
+    events.forEach((e: any) => {
+      // Avoid duplicate IDs
+      if (nodes.some(n => n.id === e.id)) return;
+
+      nodes.push({
+        id: e.id,
+        label: e.title,
+        type: 'event',
+        color: '#ff4d4d',
+        size: 10,
+        description: e.description || `${e.title} — a key historical milestone.`
+      });
+
+      if (e.civilization && civs.some((c: any) => c.id === e.civilization)) {
+        links.push({ source: e.id, target: e.civilization, strength: 0.85 });
+      }
+
+      if (e.figures) {
+        e.figures.forEach((figId: string) => {
+          if (figures.some((fig: any) => fig.id === figId)) {
+            links.push({ source: e.id, target: figId, strength: 0.75 });
+          }
+        });
+      }
+    });
+
+    // ============================================================
+    // FORCE SIMULATION
+    // ============================================================
+    const simulation = d3.forceSimulation(nodes as any)
+      .force('link', d3.forceLink(links)
+        .id((d: any) => d.id)
+        .distance((d: any) => 130 / (d.strength ?? 0.5))
+        .strength((d: any) => d.strength ?? 0.5)
+      )
+      .force('charge', d3.forceManyBody().strength(-220))
+      .force('center', d3.forceCenter(W / 2, H / 2))
+      .force('collision', d3.forceCollide((d: any) => d.size + 12));
+
+    // ============================================================
+    // ZOOM
+    // ============================================================
+    const mainGroup = svg.append('g').attr('id', 'graph-main');
+
+    const zoom = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.15, 6])
+      .on('zoom', (e) => mainGroup.attr('transform', e.transform.toString()));
+
+    svg.call(zoom);
+
+    // ============================================================
+    // RENDER LINKS
+    // ============================================================
+    const link = mainGroup.append('g')
+      .selectAll('line')
+      .data(links)
+      .join('line')
+      .attr('class', 'graph-link')
+      .attr('stroke', 'rgba(255,255,255,0.06)')
+      .attr('stroke-width', (d) => Math.max(0.5, (d.strength ?? 0.5) * 1.8));
+
+    // ============================================================
+    // RENDER NODES
+    // ============================================================
+    const nodeGroup = mainGroup.append('g')
+      .selectAll('g')
+      .data(nodes)
+      .join('g')
+      .attr('class', 'graph-node')
+      .attr('cursor', 'pointer')
+      .call(d3.drag<SVGGElement, any>()
+        .on('start', (event, d) => {
+          if (!event.active) simulation.alphaTarget(0.3).restart();
+          d.fx = d.x; d.fy = d.y;
+        })
+        .on('drag', (event, d) => {
+          d.fx = event.x; d.fy = event.y;
+        })
+        .on('end', (event, d) => {
+          if (!event.active) simulation.alphaTarget(0);
+          d.fx = null; d.fy = null;
+        })
+      );
+
+    // Outer glow ring
+    nodeGroup.append('circle')
+      .attr('class', 'node-glow-ring')
+      .attr('r', (d: any) => d.size + 8)
+      .attr('fill', (d: any) => d.color)
+      .attr('opacity', 0.08);
+
+    // Main circle
+    nodeGroup.append('circle')
+      .attr('r', (d: any) => d.size)
+      .attr('fill', (d: any) => d.color)
+      .attr('opacity', 0.85)
+      .attr('stroke', 'var(--color-bg)')
+      .attr('stroke-width', 1.5);
+
+    // Text Label
+    nodeGroup.append('text')
+      .attr('dy', (d: any) => d.size + 14)
+      .attr('text-anchor', 'middle')
+      .attr('fill', 'rgba(255,255,255,0.7)')
+      .attr('font-size', 9)
+      .attr('font-family', 'Inter, sans-serif')
+      .text((d: any) => d.label);
+
+    // Node Interaction
+    nodeGroup
+      .on('mouseenter', function(event, d: any) {
+        d3.select(this)
+          .select('circle:nth-child(2)')
+          .transition().duration(150)
+          .attr('r', d.size * 1.3)
+          .attr('opacity', 1);
+
+        d3.select(this)
+          .select('.node-glow-ring')
+          .transition().duration(150)
+          .attr('opacity', 0.25);
+
+        // Highlight active connections
+        link.attr('stroke', (l: any) =>
+          l.source.id === d.id || l.target.id === d.id
+            ? d.color
+            : 'rgba(255,255,255,0.03)'
+        ).attr('stroke-width', (l: any) =>
+          l.source.id === d.id || l.target.id === d.id ? 2 : 0.5
+        );
+      })
+      .on('mouseleave', function(event, d: any) {
+        d3.select(this)
+          .select('circle:nth-child(2)')
+          .transition().duration(150)
+          .attr('r', d.size)
+          .attr('opacity', 0.85);
+
+        d3.select(this)
+          .select('.node-glow-ring')
+          .transition().duration(150)
+          .attr('opacity', 0.08);
+
+        link
+          .attr('stroke', 'rgba(255,255,255,0.06)')
+          .attr('stroke-width', (l: any) => Math.max(0.5, (l.strength ?? 0.5) * 1.8));
+      })
+      .on('click', (event, d: any) => {
+        event.stopPropagation();
+        showPopup(d);
+      });
+
+    // Tick update positions
+    simulation.on('tick', () => {
+      link
+        .attr('x1', (d: any) => d.source.x)
+        .attr('y1', (d: any) => d.source.y)
+        .attr('x2', (d: any) => d.target.x)
+        .attr('y2', (d: any) => d.target.y);
+
+      nodeGroup.attr('transform', (d: any) => `translate(${d.x}, ${d.y})`);
+    });
+
+    // ============================================================
+    // DETAILS POPUP
+    // ============================================================
+    function showPopup(d: any) {
+      const typeLabelEl = document.getElementById('popup-type');
+      const titleEl = document.getElementById('popup-title');
+      const descEl = document.getElementById('popup-desc');
+      const connEl = document.getElementById('popup-connections');
+      const linkEl = document.getElementById('popup-link') as HTMLAnchorElement;
+
+      if (typeLabelEl) typeLabelEl.textContent = d.type.charAt(0).toUpperCase() + d.type.slice(1);
+      if (titleEl) titleEl.textContent = d.label;
+      if (descEl) descEl.textContent = d.description;
+
+      const connCount = links.filter(l =>
+        (l.source as any).id === d.id || (l.target as any).id === d.id
+      ).length;
+      if (connEl) connEl.textContent = `${connCount} connection${connCount !== 1 ? 's' : ''}`;
+
+      const href = d.type === 'civilization' ? `/civilizations/${d.id}`
+                 : d.type === 'figure' ? `/figures/${d.id}`
+                 : `/timeline`;
+      if (linkEl) {
+        linkEl.href = href;
+        if (d.type === 'event') {
+          // If event, link to timeline with that event year
+          const ev = events.find((e: any) => e.id === d.id);
+          if (ev) {
+            linkEl.href = `/timeline?year=${ev.year}`;
+          }
+        }
+      }
+
+      popup?.setAttribute('aria-hidden', 'false');
+    }
+
+    document.getElementById('graph-popup-close')?.addEventListener('click', () => {
+      popup?.setAttribute('aria-hidden', 'true');
+    });
+
+    svg.on('click', () => popup?.setAttribute('aria-hidden', 'true'));
+
+    // ============================================================
+    // RESET ZOOM
+    // ============================================================
+    document.getElementById('graph-reset-btn')?.addEventListener('click', () => {
+      svg.transition().duration(800).ease(d3.easeCubicInOut)
+        .call(zoom.transform as any, d3.zoomIdentity);
+    });
+
+    // ============================================================
+    // TYPE FILTERS
+    // ============================================================
+    document.querySelectorAll('.graph-type-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.graph-type-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+
+        const type = (btn as HTMLElement).dataset.type ?? 'all';
+        
+        nodeGroup.transition().duration(200).attr('opacity', (d: any) =>
+          type === 'all' || d.type === type ? 1 : 0.08
+        );
+        link.transition().duration(200).attr('opacity', (l: any) => {
+          if (type === 'all') return 1;
+          return (l.source.type === type || l.target.type === type) ? 1 : 0.04;
+        });
+      });
+    });
+
+    // ============================================================
+    // TEXT SEARCH
+    // ============================================================
+    const graphSearch = document.getElementById('graph-search') as HTMLInputElement;
+    graphSearch?.addEventListener('input', () => {
+      const q = graphSearch.value.toLowerCase();
+      nodeGroup.attr('opacity', (d: any) =>
+        !q || d.label.toLowerCase().includes(q) ? 1 : 0.1
+      );
+    });
+
+    setTimeout(() => loading?.classList.add('hidden'), 450);
+  }
+
+  initGraph().catch(console.error);
+</script>

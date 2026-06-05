@@ -1,0 +1,353 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import figures from '../../data/figures.json';
+
+export function getStaticPaths() {
+  return figures.map(fig => ({
+    params: { slug: fig.id },
+    props: { fig },
+  }));
+}
+
+const { fig } = Astro.props;
+---
+
+<Layout
+  title={fig.name}
+  description={`${fig.name} (${fig.born < 0 ? Math.abs(fig.born) + ' BCE' : fig.born + ' CE'} – ${fig.died < 0 ? Math.abs(fig.died) + ' BCE' : fig.died + ' CE'}): ${fig.significance}`}
+>
+  <article class="figure-detail" style="padding-top: var(--nav-height)">
+
+    <!-- Hero -->
+    <div class="fig-hero">
+      <div class="container-content fig-hero-inner">
+        <div class="fig-hero-breadcrumb">
+          <a href="/figures" class="text-body-sm text-mute hover-link">Historical Figures</a>
+          <span class="text-mute" aria-hidden="true">›</span>
+          <span class="text-body-sm">{fig.name}</span>
+        </div>
+
+        <div class="fig-hero-content">
+          <!-- Avatar -->
+          <div class="fig-avatar" aria-hidden="true">
+            <div class="fig-avatar-inner">
+              {fig.name.split(' ').map(w => w.charAt(0)).join('').slice(0, 2)}
+            </div>
+            <div class="fig-avatar-ring"></div>
+          </div>
+
+          <!-- Info -->
+          <div class="fig-hero-info">
+            <div class="fig-meta">
+              <span class="fig-role-badge text-mono">{fig.role}</span>
+              <a href={`/civilizations/${fig.civilization}`} class="fig-civ-badge text-mono">
+                {fig.civilization.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+              </a>
+            </div>
+
+            <h1 class="text-display-xl fig-name">{fig.name}</h1>
+
+            <p class="fig-dates text-mono">
+              {fig.born < 0 ? `${Math.abs(fig.born)} BCE` : `${fig.born} CE`}
+              {' – '}
+              {fig.died < 0 ? `${Math.abs(fig.died)} BCE` : `${fig.died} CE`}
+              <span class="text-mute">({Math.abs(fig.died - fig.born)} years)</span>
+            </p>
+
+            <p class="fig-significance text-body-lg">{fig.significance}</p>
+
+            <div class="fig-tags">
+              {fig.tags.map(tag => (
+                <span class="fig-tag text-mono">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="container-content fig-content section">
+      <div class="fig-layout">
+        <div class="fig-main">
+          <!-- Biography -->
+          <section class="fig-section" aria-labelledby="fig-bio-heading">
+            <h2 id="fig-bio-heading" class="fig-section-title text-display-sm">Biography</h2>
+            <p class="text-body-md text-body fig-bio">{fig.biography}</p>
+          </section>
+
+          <!-- Key Events mini-timeline -->
+          <section class="fig-section" aria-labelledby="fig-events-heading">
+            <h2 id="fig-events-heading" class="fig-section-title text-display-sm">Key Events</h2>
+            <div class="fig-timeline">
+              {fig.keyEvents.map((ev, i) => (
+                <div class="fig-tl-item">
+                  <div class="fig-tl-year text-mono">
+                    {ev.year < 0 ? `${Math.abs(ev.year)} BCE` : `${ev.year} CE`}
+                  </div>
+                  <div class="fig-tl-dot" aria-hidden="true"></div>
+                  <div class="fig-tl-event text-body-md">{ev.event}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <!-- Relationships -->
+          {fig.relationships.length > 0 && (
+            <section class="fig-section" aria-labelledby="fig-rel-heading">
+              <h2 id="fig-rel-heading" class="fig-section-title text-display-sm">Historical Relationships</h2>
+              <div class="fig-rels">
+                {fig.relationships.map(rel => (
+                  <a href={`/figures/${rel.person}`} class="fig-rel-card card">
+                    <div class="fig-rel-avatar">
+                      {rel.person.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <div class="fig-rel-name text-body-sm">
+                        {rel.person.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                      </div>
+                      <div class="fig-rel-type text-mono">{rel.type}</div>
+                    </div>
+                    <svg class="fig-rel-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+                      <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="fig-sidebar">
+          <div class="fig-info-card card">
+            <h3 class="fig-info-title text-body-sm">Quick Info</h3>
+            <dl class="fig-info-list">
+              <dt class="fig-info-key text-mono">Born</dt>
+              <dd class="fig-info-val text-body-sm">
+                {fig.born < 0 ? `${Math.abs(fig.born)} BCE` : `${fig.born} CE`}
+              </dd>
+              <dt class="fig-info-key text-mono">Died</dt>
+              <dd class="fig-info-val text-body-sm">
+                {fig.died < 0 ? `${Math.abs(fig.died)} BCE` : `${fig.died} CE`}
+              </dd>
+              <dt class="fig-info-key text-mono">Era</dt>
+              <dd class="fig-info-val text-body-sm">{fig.era}</dd>
+              <dt class="fig-info-key text-mono">Region</dt>
+              <dd class="fig-info-val text-body-sm">{fig.region}</dd>
+              <dt class="fig-info-key text-mono">Role</dt>
+              <dd class="fig-info-val text-body-sm">{fig.role}</dd>
+            </dl>
+          </div>
+
+          <div class="fig-sidebar-actions">
+            <a href="/knowledge-graph" class="btn btn-secondary fig-action-btn">
+              View in Knowledge Graph →
+            </a>
+            <a href={`/timeline?year=${fig.born}`} class="btn btn-primary fig-action-btn">
+              View Timeline Era →
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .fig-hero {
+    padding: var(--space-4xl) 0 var(--space-3xl);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-soft);
+  }
+  .fig-hero-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+  .fig-hero-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: 13px;
+  }
+  .hover-link { text-decoration: none; transition: color var(--transition-fast); }
+  .hover-link:hover { color: var(--color-ink); }
+
+  .fig-hero-content {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-xl);
+  }
+
+  /* Avatar */
+  .fig-avatar {
+    position: relative;
+    flex-shrink: 0;
+  }
+  .fig-avatar-inner {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-xl);
+    background: var(--gradient-develop);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    position: relative;
+    z-index: 1;
+  }
+  .fig-avatar-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 20px;
+    background: var(--gradient-develop);
+    opacity: 0.2;
+    filter: blur(8px);
+  }
+
+  .fig-hero-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    flex: 1;
+  }
+  .fig-meta { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+  .fig-role-badge, .fig-civ-badge {
+    font-size: 10px;
+    border-radius: var(--radius-full);
+    padding: 3px 10px;
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: var(--transition-fast);
+  }
+  .fig-role-badge { color: var(--color-mute); background: var(--color-bg-hover); }
+  .fig-civ-badge { color: var(--color-link); background: rgba(0,124,240,0.08); border-color: rgba(0,124,240,0.2); }
+  .fig-civ-badge:hover { background: rgba(0,124,240,0.15); }
+
+  .fig-name {
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -1.5px;
+    line-height: 1;
+  }
+  .fig-dates { font-size: 13px; color: var(--color-body); }
+  .fig-significance { color: var(--color-body); max-width: 600px; line-height: 1.6; }
+  .fig-tags { display: flex; gap: var(--space-xs); flex-wrap: wrap; }
+  .fig-tag {
+    font-size: 10px;
+    color: var(--color-mute);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 2px 8px;
+  }
+
+  /* Content */
+  .fig-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: var(--space-3xl);
+    align-items: start;
+  }
+  .fig-main { display: flex; flex-direction: column; gap: var(--space-3xl); }
+  .fig-section { display: flex; flex-direction: column; gap: var(--space-lg); }
+  .fig-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .fig-bio { line-height: 1.8; }
+
+  /* Timeline */
+  .fig-timeline { display: flex; flex-direction: column; position: relative; }
+  .fig-timeline::before {
+    content: '';
+    position: absolute;
+    left: 78px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--color-border);
+  }
+  .fig-tl-item {
+    display: grid;
+    grid-template-columns: 72px 12px 1fr;
+    gap: var(--space-md);
+    align-items: flex-start;
+    padding-block: 10px;
+  }
+  .fig-tl-year { font-size: 10px; color: var(--color-link); text-align: right; padding-top: 2px; line-height: 1.2; }
+  .fig-tl-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    background: var(--color-link);
+    border: 2px solid var(--color-bg-soft);
+    box-shadow: 0 0 6px var(--color-link);
+    margin-top: 2px;
+  }
+  .fig-tl-event { font-size: 14px; color: var(--color-body); line-height: 1.5; }
+
+  /* Relationships */
+  .fig-rels { display: flex; flex-direction: column; gap: var(--space-sm); }
+  .fig-rel-card {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-normal);
+  }
+  .fig-rel-card:hover { transform: translateX(4px); }
+  .fig-rel-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-hover);
+    border: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--color-body);
+    flex-shrink: 0;
+  }
+  .fig-rel-name { font-size: 13px; font-weight: 600; }
+  .fig-rel-type { font-size: 10px; color: var(--color-link); }
+  .fig-rel-arrow { margin-left: auto; color: var(--color-mute); }
+
+  /* Sidebar */
+  .fig-sidebar {
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-lg));
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .fig-info-card {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+  .fig-info-title { font-weight: 600; font-size: 13px; }
+  .fig-info-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px var(--space-md);
+  }
+  .fig-info-key { font-size: 10px; color: var(--color-mute); text-transform: uppercase; letter-spacing: 0.05em; }
+  .fig-info-val { font-size: 13px; color: var(--color-body); }
+  .fig-sidebar-actions { display: flex; flex-direction: column; gap: var(--space-xs); }
+  .fig-action-btn { width: 100%; justify-content: center; height: 40px; font-size: 13px; border-radius: var(--radius-sm); }
+
+  @media (max-width: 959px) {
+    .fig-layout { grid-template-columns: 1fr; }
+    .fig-sidebar { position: static; }
+    .fig-hero-content { flex-direction: column; }
+  }
+</style>
