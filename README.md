@@ -1,94 +1,257 @@
-# Astro Starter Kit: Basics
+# 🌍 Complete World History
 
-```sh
-npm create astro@latest -- --template basics
-```
+A comprehensive open-source platform dedicated to exploring the history of civilizations, kingdoms, empires, cultures, historical figures, and major events from around the world.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+<a href="https://complete-world-history.vercel.app/" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/badge/🌍%20Still%20In%20Development-Explore%20the%20Site-b8860b?style=for-the-badge&logo=wikipedia&logoColor=white" alt="Complete World History">
+</a>
 
-## 🚀 Project Structure
+## 📖 About the Project
 
-Inside of your Astro project, you'll see the following folders and files:
+Complete World History aims to become a centralized resource for historical knowledge, allowing users to explore world history through interactive timelines, maps, datasets, and educational tools.
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+Whether you're a student, researcher, educator, or history enthusiast, this project is designed to make learning history more engaging, accessible, and data-driven.
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+---
 
-## Website Previews
-<img width="1919" height="1071" alt="Screenshot 2026-06-05 205315" src="https://github.com/user-attachments/assets/909697d4-243c-44cd-be3a-a458a7bf09aa" /> <img width="1919" height="1069" alt="Screenshot 2026-06-05 205828" src="https://github.com/user-attachments/assets/0e0d09fe-bf87-44d4-a2d4-4e468e15de9a" /> <img width="1919" height="1069" alt="Screenshot 2026-06-05 205900" src="https://github.com/user-attachments/assets/fe20530a-e00e-4a41-ab11-9ca6d32a44e1" /> <img width="1919" height="1021" alt="Screenshot 2026-06-05 205932" src="https://github.com/user-attachments/assets/89ea3f53-b83f-42d1-998a-1232658229bd" /> <img width="1919" height="1067" alt="Screenshot 2026-06-05 210006" src="https://github.com/user-attachments/assets/1580f734-d8fe-47bb-b33b-7579cae387a6" /> <img width="1919" height="1071" alt="Screenshot 2026-06-05 210024" src="https://github.com/user-attachments/assets/92e93f83-8cc7-4f61-8678-b6c4bf8d767e" /> <img width="1919" height="1069" alt="Screenshot 2026-06-05 210038" src="https://github.com/user-attachments/assets/339b34ed-3c83-4850-b4f4-a7c9cc86759c" />
+## ✨ Features
 
+### Current Features
 
-## 🧞 Commands
+* Historical civilizations database
+* Kingdom and empire records
+* Historical timeline exploration
+* Search and filtering capabilities
+* Responsive web interface
 
-All commands are run from the root of the project, from a terminal:
+### Planned Features
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-
-
-## 🤝 Looking for Contributors
-
-Hello everyone!
-
-This project aims to build a comprehensive and interactive platform for exploring world history, including civilizations, kingdoms, empires, historical events, maps, timelines, and educational resources.
-
-The project is still under active development, and I am looking for contributors who are interested in:
-
-* Frontend development (React, Next.js, UI/UX)
-* Backend development (APIs, databases, authentication)
-* Historical data collection and verification
-* Data visualization and mapping
-* Performance optimization
-* Testing and bug fixing
-* Documentation improvements
-* Educational content creation
-
-### How You Can Help
-
-If you would like to contribute, feel free to:
-
-* Open an issue to discuss ideas
-* Submit bug reports
-* Suggest new features
-* Create pull requests
-* Improve documentation
-* Expand historical datasets
-
-### Future Goals
-
-Some major features planned for future releases include:
-
-* Interactive historical maps
-* Empire expansion visualizations
+* Interactive world history timeline
+* Historical maps and territorial changes
+* Historical figures and biographies
+* Event relationship visualization
 * AI-powered history assistant
-* Advanced timeline exploration
+* Educational quizzes and learning tools
 * Multi-language support
-* Historical figure database
-* Educational quizzes and learning modules
+* Advanced search and analytics
 
-Every contribution, no matter how small, is greatly appreciated.
 
-If you're interested in helping shape the future of this project, please open an issue or submit a pull request.
 
-Thank you for your support and contributions!
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* React
+* Next.js
+* TypeScript
+* Tailwind CSS
+
+### Backend
+
+* Node.js
+* REST API
+
+### Database
+
+* PostgreSQL
+* PostGIS (Geospatial Historical Mapping)
+
+### Tools
+
+* Git
+* GitHub
+
+---
+
+## 🚀 Getting Started
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/snehith2024/Complete_World_History.git
+cd Complete_World_History
+```
+
+### Install Dependencies
+
+```bash
+npm install
+```
+
+### Run Development Server
+
+```bash
+npm run dev
+```
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+---
+
+## 📂 Project Goals
+
+Our long-term vision includes:
+
+* Creating the largest open-source world history database
+* Visualizing territorial changes through history
+* Providing accurate historical datasets
+* Building educational tools for students and teachers
+* Developing AI-assisted historical exploration
+* Supporting collaborative historical research
+
+---
+
+## 🤝 Contributors Wanted
+
+We are actively looking for contributors who are passionate about technology, history, education, and open-source development.
+
+### Looking For
+
+#### 💻 Developers
+
+* React Developers
+* Next.js Developers
+* Full Stack Developers
+* Backend Engineers
+* Database Engineers
+
+#### 🎨 Designers
+
+* UI/UX Designers
+* Data Visualization Designers
+
+#### 📚 Researchers
+
+* Historians
+* History Students
+* Data Collectors
+* Content Contributors
+
+#### 🔍 Testers
+
+* QA Engineers
+* Bug Reporters
+
+---
+
+## 🎯 Ways to Contribute
+
+You can contribute by:
+
+* Fixing bugs
+* Improving UI/UX
+* Expanding historical datasets
+* Creating new visualizations
+* Improving performance
+* Writing documentation
+* Suggesting new features
+* Reviewing pull requests
+
+### Contribution Process
+
+1. Fork the repository
+2. Create a new branch
+
+```bash
+git checkout -b feature/your-feature-name
+```
+
+3. Make your changes
+
+4. Commit your changes
+
+```bash
+git commit -m "Add your feature"
+```
+
+5. Push to your fork
+
+```bash
+git push origin feature/your-feature-name
+```
+
+6. Open a Pull Request
+
+---
+
+## 🐛 Reporting Issues
+
+Found a bug or have a feature request?
+
+Please open an issue and include:
+
+* Description of the problem
+* Steps to reproduce
+* Expected behavior
+* Screenshots (if applicable)
+
+---
+
+## 🌟 Support the Project
+
+If you find this project interesting:
+
+* ⭐ Star the repository
+* 🍴 Fork the project
+* 📢 Share it with others
+* 🤝 Become a contributor
+
+Every contribution helps make this project better.
+
+---
+
+## 📈 Future Roadmap
+
+### Phase 1
+
+* Core historical database
+* Timeline system
+* Search functionality
+
+### Phase 2
+
+* Interactive maps
+* Historical figures database
+* Advanced filtering
+
+### Phase 3
+
+* AI-powered historical assistant
+* Educational modules
+* Community contributions portal
+
+### Phase 4
+
+* Mobile application
+* Public API
+* Research collaboration tools
+
+---
+
+## 📜 License
+
+This project is licensed under the MIT License.
+
+See the LICENSE file for more information.
+
+---
+
+## 👨‍💻 Author
+
+**Snehith Santhosh**
+
+GitHub:
+https://github.com/snehith2024
+
+Project Repository:
+https://github.com/snehith2024/Complete_World_History
+
+---
+
+### Together, let's build one of the world's most comprehensive open-source history platforms. 🌍
