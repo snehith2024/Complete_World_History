@@ -1,0 +1,70 @@
+name,start_year,end_year,region,type,capital
+Indus Valley Civilization,-3300,-1300,India/Pakistan,Civilization,Harappa
+Mahajanapadas,-600,-300,India,Kingdoms,Various
+Magadha,-684,-320,India,Kingdom,Rajgir
+Nanda Empire,-345,-322,India,Empire,Pataliputra
+Maurya Empire,-322,-185,India,Empire,Pataliputra
+Shunga Empire,-185,-73,India,Empire,Pataliputra
+Satavahana Empire,-230,220,India,Empire,Pratishthana
+Kushan Empire,30,375,Central/South Asia,Empire,Purushapura
+Gupta Empire,320,550,India,Empire,Pataliputra
+Harsha Empire,606,647,India,Empire,Kannauj
+Chola Empire,848,1279,India,Empire,Thanjavur
+Vijayanagara Empire,1336,1646,India,Empire,Hampi
+Delhi Sultanate,1206,1526,India,Sultanate,Delhi
+Mughal Empire,1526,1857,India,Empire,Agra/Delhi
+Maratha Confederacy,1674,1818,India,Confederacy,Pune
+Ancient Egypt,-3100,-30,Egypt,Kingdom,Memphis
+Kingdom of Kush,-1070,350,Sudan,Kingdom,Napata
+Aksumite Empire,100,940,Ethiopia/Eritrea,Empire,Aksum
+Ghana Empire,300,1240,West Africa,Empire,Koumbi Saleh
+Mali Empire,1235,1670,West Africa,Empire,Niani
+Songhai Empire,1464,1591,West Africa,Empire,Gao
+Kingdom of Benin,1180,1897,Nigeria,Kingdom,Benin City
+Sumer,-4500,-1900,Mesopotamia,Civilization,Uruk
+Akkadian Empire,-2334,-2154,Mesopotamia,Empire,Akkad
+Babylonian Empire,-1894,-539,Mesopotamia,Empire,Babylon
+Assyrian Empire,-2500,-609,Mesopotamia,Empire,Ashur
+Hittite Empire,-1600,-1178,Anatolia,Empire,Hattusa
+Achaemenid Empire,-550,-330,Persia,Empire,Persepolis
+Seleucid Empire,-312,-63,Middle East,Empire,Seleucia
+Parthian Empire,-247,224,Persia,Empire,Ctesiphon
+Sassanian Empire,224,651,Persia,Empire,Ctesiphon
+Umayyad Caliphate,661,750,Middle East,Caliphate,Damascus
+Abbasid Caliphate,750,1258,Middle East,Caliphate,Baghdad
+Seljuk Empire,1037,1194,Middle East,Empire,Isfahan
+Safavid Empire,1501,1736,Persia,Empire,Isfahan
+Ancient Greece,-800,-146,Greece,Civilization,Athens
+Macedonian Empire,-336,-323,Greece,Empire,Pella
+Roman Republic,-509,-27,Italy,Republic,Rome
+Roman Empire,-27,476,Europe,Empire,Rome
+Byzantine Empire,330,1453,Europe,Empire,Constantinople
+Frankish Kingdom,481,843,Europe,Kingdom,Paris
+Holy Roman Empire,800,1806,Central Europe,Empire,Various
+Kingdom of England,927,1707,England,Kingdom,London
+Kingdom of France,843,1792,France,Kingdom,Paris
+Spanish Empire,1492,1976,Global,Empire,Madrid
+Portuguese Empire,1415,1999,Global,Empire,Lisbon
+Dutch Empire,1581,1975,Global,Empire,Amsterdam
+British Empire,1583,1997,Global,Empire,London
+Russian Empire,1721,1917,Russia,Empire,Saint Petersburg
+Ottoman Empire,1299,1922,Middle East/Europe,Empire,Istanbul
+Mongol Empire,1206,1368,Eurasia,Empire,Karakorum
+Golden Horde,1242,1502,Eurasia,Khanate,Sarai
+Yuan Dynasty,1271,1368,China,Dynasty,Khanbaliq
+Xia Dynasty,-2070,-1600,China,Dynasty,Erlitou
+Shang Dynasty,-1600,-1046,China,Dynasty,Yin
+Zhou Dynasty,-1046,-256,China,Dynasty,Haojing
+Qin Dynasty,-221,-206,China,Dynasty,Xianyang
+Han Dynasty,-202,220,China,Dynasty,Chang'an
+Tang Dynasty,618,907,China,Dynasty,Chang'an
+Song Dynasty,960,1279,China,Dynasty,Kaifeng
+Ming Dynasty,1368,1644,China,Dynasty,Beijing
+Qing Dynasty,1644,1912,China,Dynasty,Beijing
+Yamato Japan,250,710,Japan,Kingdom,Nara
+Tokugawa Shogunate,1603,1868,Japan,Shogunate,Edo
+Maya Civilization,-2000,1697,Mesoamerica,Civilization,Various
+Teotihuacan,100,550,Mesoamerica,City-State,Teotihuacan
+Toltec Empire,950,1150,Mesoamerica,Empire,Tula
+Aztec Empire,1428,1521,Mexico,Empire,Tenochtitlan
+Inca Empire,1438,1533,Andes,Empire,Cusco

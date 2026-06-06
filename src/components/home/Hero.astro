@@ -1,93 +1,95 @@
 ---
-// Hero component — animated mesh gradient + headline
+// Hero component — Massive half-screen 3D Earth Globe
 ---
 
 <section class="hero" aria-labelledby="hero-headline">
-  <!-- Mesh gradient backdrop -->
-  <div class="hero-mesh" aria-hidden="true">
-    <div class="mesh-orb mesh-orb-1"></div>
-    <div class="mesh-orb mesh-orb-2"></div>
-    <div class="mesh-orb mesh-orb-3"></div>
-    <div class="mesh-orb mesh-orb-4"></div>
-    <!-- Grid overlay -->
+  <!-- Subtle grid backdrop -->
+  <div class="hero-backdrop" aria-hidden="true">
     <div class="hero-grid"></div>
   </div>
 
-  <div class="container-content hero-content">
-    <!-- Eyebrow badge -->
-    <div class="hero-badge animate-fade-in">
-      <span class="badge badge-new">
-        <svg width="6" height="6" viewBox="0 0 6 6" fill="none" aria-hidden="true">
-          <circle cx="3" cy="3" r="3" fill="#007cf0"/>
-        </svg>
-        New
-      </span>
-      <span class="text-body-sm text-body">AI History Assistant available in the Timeline</span>
-    </div>
-
-    <!-- Main headline -->
-    <h1
-      id="hero-headline"
-      class="text-display-xl hero-headline animate-fade-in"
-      style="animation-delay: 80ms;"
-    >
-      The complete history<br/>
-      of <span class="gradient-text-develop">humanity.</span><br/>
-      <span class="hero-headline-sub">Infinitely explorable.</span>
-    </h1>
-
-    <!-- Sub-headline -->
-    <p
-      class="text-body-lg hero-body animate-fade-in"
-      style="animation-delay: 160ms;"
-    >
-      Zoom through 13.8 billion years — from the Big Bang to today.<br class="hero-break"/>
-      Parallel civilizations. Interactive maps. Knowledge graphs.
-    </p>
-
-    <!-- CTA Row -->
-    <div class="hero-cta animate-fade-in" style="animation-delay: 240ms;">
-      <a href="/timeline" class="btn btn-primary hero-btn-primary" id="hero-explore-btn">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M5 8h6M9 5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Explore Timeline
-      </a>
-      <a href="/map" class="btn btn-secondary hero-btn-secondary" id="hero-map-btn">
-        Historical Map
-      </a>
-      <a href="/civilizations" class="btn btn-ghost hero-btn-ghost">
-        Browse Civilizations →
-      </a>
-    </div>
-
-    <!-- Stats row -->
-    <div class="hero-stats animate-fade-in" style="animation-delay: 320ms;" aria-label="Key statistics">
-      <div class="hero-stat">
-        <span class="hero-stat-value gradient-text-develop">13.8B</span>
-        <span class="hero-stat-label text-mono">years covered</span>
+  <!-- LEFT: Text content -->
+  <div class="hero-text-col">
+    <div class="hero-text-inner">
+      <!-- Eyebrow badge -->
+      <div class="hero-badge animate-fade-in">
+        <span class="badge badge-new">
+          <svg width="6" height="6" viewBox="0 0 6 6" fill="none" aria-hidden="true">
+            <circle cx="3" cy="3" r="3" fill="#007cf0"/>
+          </svg>
+          New
+        </span>
+        <span class="text-body-sm text-body">Interactive Historical Atlas with 78+ empires</span>
       </div>
-      <div class="hero-stat-divider" aria-hidden="true"></div>
-      <div class="hero-stat">
-        <span class="hero-stat-value gradient-text-preview">2,542+</span>
-        <span class="hero-stat-label text-mono">historical events</span>
+
+      <h1
+        id="hero-headline"
+        class="text-display-xl hero-headline animate-fade-in"
+        style="animation-delay: 80ms;"
+      >
+        The complete history<br/>
+        of <span class="gradient-text-develop">humanity.</span><br/>
+        <span class="hero-headline-sub">Infinitely explorable.</span>
+      </h1>
+
+      <p
+        class="text-body-lg hero-body animate-fade-in"
+        style="animation-delay: 160ms;"
+      >
+        Zoom through 13.8 billion years — from the Big Bang to today.<br class="hero-break"/>
+        Parallel civilizations. Interactive maps. Knowledge graphs.
+      </p>
+
+      <!-- CTA Row -->
+      <div class="hero-cta animate-fade-in" style="animation-delay: 240ms;">
+        <a href="/timeline" class="btn btn-primary hero-btn-primary" id="hero-explore-btn">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M5 8h6M9 5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Explore Timeline
+        </a>
+        <a href="/map" class="btn btn-secondary hero-btn-secondary" id="hero-map-btn">
+          Historical Map
+        </a>
+        <a href="/civilizations" class="btn btn-ghost hero-btn-ghost">
+          Browse Civilizations →
+        </a>
       </div>
-      <div class="hero-stat-divider" aria-hidden="true"></div>
-      <div class="hero-stat">
-        <span class="hero-stat-value gradient-text-ship">127+</span>
-        <span class="hero-stat-label text-mono">civilizations</span>
-      </div>
-      <div class="hero-stat-divider" aria-hidden="true"></div>
-      <div class="hero-stat">
-        <span class="hero-stat-value" style="color: var(--color-era-classical)">8</span>
-        <span class="hero-stat-label text-mono">history layers</span>
+
+      <!-- Stats row -->
+      <div class="hero-stats animate-fade-in" style="animation-delay: 320ms;" aria-label="Key statistics">
+        <div class="hero-stat">
+          <span class="hero-stat-value gradient-text-develop">13.8B</span>
+          <span class="hero-stat-label text-mono">years covered</span>
+        </div>
+        <div class="hero-stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value gradient-text-preview">2,542+</span>
+          <span class="hero-stat-label text-mono">historical events</span>
+        </div>
+        <div class="hero-stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value gradient-text-ship">127+</span>
+          <span class="hero-stat-label text-mono">civilizations</span>
+        </div>
+        <div class="hero-stat-divider" aria-hidden="true"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value" style="color: var(--color-era-classical)">8</span>
+          <span class="hero-stat-label text-mono">history layers</span>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- RIGHT: Massive Globe (half off-screen) -->
+  <div class="hero-globe-container" aria-hidden="true">
+    <canvas id="hero-globe-canvas"></canvas>
+  </div>
+  <div class="hero-globe-interactive-zone" aria-label="Interactive 3D Globe control"></div>
+
   <!-- Timeline preview strip -->
-  <div class="hero-timeline-strip" aria-hidden="true">
+  <div class="hero-timeline-strip">
     <div class="timeline-strip-track">
       <div class="timeline-strip-inner" id="hero-strip">
         <div class="strip-era" style="--c: var(--color-era-universe); --w: 5%;">
@@ -131,7 +133,6 @@
           <span class="strip-date">2024</span>
         </div>
       </div>
-      <!-- Scan line -->
       <div class="timeline-scan-line"></div>
     </div>
     <a href="/timeline" class="strip-cta text-mono">Open full timeline →</a>
@@ -144,80 +145,47 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-top: calc(var(--nav-height) + var(--space-3xl));
-    padding-bottom: 0;
     overflow: hidden;
+    background: #030712;
   }
 
-  /* Mesh Background */
-  .hero-mesh {
+  /* Backdrop */
+  .hero-backdrop {
     position: absolute;
     inset: 0;
-    overflow: hidden;
     pointer-events: none;
   }
-  .mesh-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.15;
-  }
-  .mesh-orb-1 {
-    width: 600px;
-    height: 600px;
-    top: -200px;
-    left: -100px;
-    background: radial-gradient(circle, #007cf0, transparent);
-    animation: float 8s ease-in-out infinite;
-  }
-  .mesh-orb-2 {
-    width: 500px;
-    height: 500px;
-    top: -100px;
-    right: -100px;
-    background: radial-gradient(circle, #7928ca, transparent);
-    animation: float 10s ease-in-out infinite reverse;
-  }
-  .mesh-orb-3 {
-    width: 400px;
-    height: 400px;
-    bottom: 20%;
-    left: 20%;
-    background: radial-gradient(circle, #00dfd8, transparent);
-    animation: float 12s ease-in-out infinite;
-    animation-delay: -3s;
-  }
-  .mesh-orb-4 {
-    width: 300px;
-    height: 300px;
-    bottom: 30%;
-    right: 15%;
-    background: radial-gradient(circle, #ff0080, transparent);
-    animation: float 9s ease-in-out infinite reverse;
-    animation-delay: -5s;
-  }
-  /* Subtle grid */
   .hero-grid {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
     background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 70% at 30% 50%, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at 30% 50%, black 30%, transparent 70%);
   }
 
-  /* Content */
-  .hero-content {
+  /* ─── Text Column ─── */
+  .hero-text-col {
     position: relative;
-    z-index: 1;
-    text-align: center;
+    z-index: 10;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding-top: calc(var(--nav-height) + var(--space-xl));
+    padding-bottom: var(--space-3xl);
+    pointer-events: none;
+  }
+  .hero-text-inner {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-xl);
-    padding-bottom: var(--space-5xl);
+    padding-left: max(var(--space-xl), 6vw);
+    padding-right: var(--space-lg);
+    max-width: 620px;
+    pointer-events: auto;
   }
 
   .hero-badge {
@@ -231,11 +199,11 @@
   }
 
   .hero-headline {
-    font-size: clamp(40px, 7vw, 72px);
+    font-size: clamp(36px, 5.5vw, 68px);
     font-weight: 600;
-    letter-spacing: -3px;
+    letter-spacing: -2.5px;
     line-height: 0.95;
-    max-width: 900px;
+    text-align: left;
   }
   .hero-headline-sub {
     color: var(--color-body);
@@ -244,18 +212,17 @@
 
   .hero-body {
     color: var(--color-body);
-    max-width: 560px;
-    line-height: 1.6;
+    max-width: 460px;
+    line-height: 1.65;
+    text-align: left;
   }
   .hero-break { display: block; }
 
-  /* CTA */
   .hero-cta {
     display: flex;
     align-items: center;
     gap: var(--space-sm);
     flex-wrap: wrap;
-    justify-content: center;
   }
   .hero-btn-primary {
     height: 52px;
@@ -279,45 +246,80 @@
   }
   .hero-btn-ghost:hover { color: var(--color-link); }
 
-  /* Stats */
   .hero-stats {
     display: flex;
     align-items: center;
-    gap: var(--space-xl);
+    gap: var(--space-lg);
     flex-wrap: wrap;
-    justify-content: center;
   }
   .hero-stat {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 2px;
   }
   .hero-stat-value {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 600;
     letter-spacing: -1px;
     line-height: 1;
   }
   .hero-stat-label {
-    font-size: 11px;
+    font-size: 10px;
     color: var(--color-mute);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
   .hero-stat-divider {
     width: 1px;
-    height: 32px;
+    height: 28px;
     background: var(--color-border);
+  }
+
+  /* ─── Globe Container — full screen, no clipping ─── */
+  .hero-globe-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+  }
+  .hero-globe-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+    outline: none;
+  }
+
+  /* Interactive zone overlays only the globe region (right 55% of screen) */
+  .hero-globe-interactive-zone {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 55vw;
+    height: 100%;
+    z-index: 6;
+    pointer-events: auto;
+    touch-action: none; /* Stops browser gesture hijacking */
+    cursor: grab;
+  }
+  .hero-globe-interactive-zone:active {
+    cursor: grabbing;
   }
 
   /* Timeline strip */
   .hero-timeline-strip {
     width: 100%;
     border-top: 1px solid var(--color-border);
-    background: var(--color-bg-soft);
+    background: rgba(3, 7, 18, 0.8);
+    backdrop-filter: blur(8px);
     padding: var(--space-md) 0;
     position: relative;
+    z-index: 10;
+    flex-shrink: 0;
   }
   .timeline-strip-track {
     position: relative;
@@ -354,9 +356,7 @@
   .strip-era::before {
     content: '';
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    bottom: 0; left: 0; right: 0;
     height: 3px;
     background: var(--c);
     opacity: 0.6;
@@ -382,8 +382,7 @@
   }
   .timeline-scan-line {
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: 0; bottom: 0;
     width: 2px;
     background: linear-gradient(to bottom, transparent, var(--color-link), transparent);
     opacity: 0.7;
@@ -402,17 +401,399 @@
   }
   .strip-cta:hover { color: var(--color-link); }
 
-  /* Responsive */
+  /* ─── Responsive ─── */
+  @media (max-width: 960px) {
+    .hero-globe-container {
+      opacity: 0.45;
+    }
+    .hero-globe-interactive-zone {
+      width: 100vw;
+    }
+    .hero-text-inner {
+      max-width: 100%;
+      padding-right: var(--space-xl);
+    }
+  }
   @media (max-width: 768px) {
     .hero-break { display: none; }
     .hero-stat-divider { display: none; }
     .hero-stats { gap: var(--space-lg); }
     .hero-btn-ghost { display: none; }
     .strip-era:nth-child(n+5) { display: none; }
+    .hero-globe-container {
+      opacity: 0.25;
+    }
   }
   @media (max-width: 599px) {
     .hero-headline { letter-spacing: -2px; }
     .hero-cta { flex-direction: column; width: 100%; }
     .hero-btn-primary, .hero-btn-secondary { width: 100%; justify-content: center; }
+    .hero-globe-container,
+    .hero-globe-interactive-zone {
+      display: none;
+    }
   }
 </style>
+
+<script>
+  // ─────────────────────────────────────────────
+  // Ultra-Realistic 3D Earth — Three.js
+  // ─────────────────────────────────────────────
+  async function initGlobe() {
+    var THREE = await import('three');
+
+    var container = document.querySelector('.hero-globe-container');
+    var canvas = document.getElementById('hero-globe-canvas');
+    var interactiveZone = document.querySelector('.hero-globe-interactive-zone');
+    if (!container || !canvas || !interactiveZone) return;
+
+    var W = container.clientWidth;
+    var H = container.clientHeight;
+
+    // ─── Renderer ───
+    var renderer = new THREE.WebGLRenderer({
+      canvas: canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
+    renderer.setSize(W, H);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.25;
+
+    // ─── Scene ───
+    var scene = new THREE.Scene();
+
+    // ─── Camera ───
+    var camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 100);
+    camera.position.z = 3.2;
+
+    // ─── Lighting — cinematic ───
+    var sun = new THREE.DirectionalLight(0xfff5ea, 3.0);
+    sun.position.set(4, 2, 4);
+    scene.add(sun);
+
+    var skyFill = new THREE.DirectionalLight(0x6688cc, 0.4);
+    skyFill.position.set(-4, 1, 1);
+    scene.add(skyFill);
+
+    var bounce = new THREE.DirectionalLight(0x332211, 0.2);
+    bounce.position.set(0, -3, 1);
+    scene.add(bounce);
+
+    var rim = new THREE.DirectionalLight(0x77aaff, 0.8);
+    rim.position.set(-1, 0, -4);
+    scene.add(rim);
+
+    var ambient = new THREE.AmbientLight(0x0c1020, 0.5);
+    scene.add(ambient);
+
+    // ─── Texture Loader ───
+    var loader = new THREE.TextureLoader();
+    loader.setCrossOrigin('anonymous');
+
+    var earthTex = loader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg');
+    var bumpTex = loader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png');
+    var specTex = loader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-water.png');
+    var nightTex = loader.load('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg');
+    var cloudTex = loader.load('https://cdn.jsdelivr.net/npm/three-globe/example/clouds/clouds.png');
+
+    earthTex.colorSpace = THREE.SRGBColorSpace;
+    nightTex.colorSpace = THREE.SRGBColorSpace;
+
+    // ─── Earth Mesh ───
+    var earthGeom = new THREE.SphereGeometry(1, 128, 128);
+    var earthMat = new THREE.MeshPhongMaterial({
+      color: new THREE.Color(0x0a1622),
+      map: earthTex,
+      bumpMap: bumpTex,
+      bumpScale: 0.015,
+      specularMap: specTex,
+      specular: new THREE.Color(0x444444),
+      shininess: 25,
+      emissiveMap: nightTex,
+      emissive: new THREE.Color(0xffcc88),
+      emissiveIntensity: 1.8,
+    });
+
+    earthMat.onBeforeCompile = function(shader) {
+      shader.uniforms.uSunDir = { value: new THREE.Vector3() };
+      shader.fragmentShader = 'uniform vec3 uSunDir;\n' + shader.fragmentShader;
+      shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <emissivemap_fragment>',
+        `
+        #ifdef USE_EMISSIVEMAP
+          vec4 emissiveColor = texture2D( emissiveMap, vEmissiveMapUv );
+          float nightFactor = smoothstep(0.1, -0.2, dot(normalize(vNormal), uSunDir));
+          totalEmissiveRadiance *= emissiveColor.rgb * nightFactor;
+        #endif
+        `
+      );
+      earthMat.userData.shader = shader;
+    };
+
+    var earth = new THREE.Mesh(earthGeom, earthMat);
+    earth.rotation.x = 0.41;
+    scene.add(earth);
+
+    // ─── Cloud Layer Mesh ───
+    var cloudGeom = new THREE.SphereGeometry(1.008, 96, 96);
+    var cloudMat = new THREE.MeshPhongMaterial({
+      map: cloudTex,
+      transparent: true,
+      opacity: 0.4,
+      depthWrite: false,
+      blending: THREE.NormalBlending,
+    });
+    var clouds = new THREE.Mesh(cloudGeom, cloudMat);
+    clouds.rotation.x = 0.41;
+    scene.add(clouds);
+
+    // ─── Atmosphere (Fresnel rim glow) ───
+    var atmosGeom = new THREE.SphereGeometry(1.02, 64, 64);
+    var atmosMat = new THREE.ShaderMaterial({
+      vertexShader: `
+        varying vec3 vNormal;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vNormal;
+        uniform vec3 uSunDir;
+        void main() {
+          float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 3.5);
+          vec3 litColor = vec3(0.35, 0.65, 1.0);
+          vec3 darkColor = vec3(0.05, 0.15, 0.4);
+          float sunDot = dot(vNormal, uSunDir);
+          float sunFactor = smoothstep(-0.2, 0.5, sunDot);
+          vec3 color = mix(darkColor, litColor, sunFactor);
+          float alpha = fresnel * 0.5;
+          gl_FragColor = vec4(color, alpha);
+        }
+      `,
+      uniforms: {
+        uSunDir: { value: new THREE.Vector3() },
+      },
+      transparent: true,
+      depthWrite: false,
+      side: THREE.FrontSide,
+      blending: THREE.AdditiveBlending,
+    });
+    var atmos = new THREE.Mesh(atmosGeom, atmosMat);
+    scene.add(atmos);
+
+    // ─── Outer Atmospheric Halo ───
+    var haloGeom = new THREE.SphereGeometry(1.12, 48, 48);
+    var haloMat = new THREE.ShaderMaterial({
+      vertexShader: `
+        varying vec3 vNormal;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vNormal;
+        void main() {
+          float intensity = pow(0.45 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 4.0);
+          gl_FragColor = vec4(0.3, 0.6, 1.0, intensity * 0.12);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
+    });
+    var halo = new THREE.Mesh(haloGeom, haloMat);
+    scene.add(halo);
+
+    // ─── Stars ───
+    var starsGeom = new THREE.BufferGeometry();
+    var N = 1500;
+    var sp = new Float32Array(N * 3);
+    for (var i = 0; i < N; i++) {
+      var th = Math.random() * Math.PI * 2;
+      var ph = Math.acos(2 * Math.random() - 1);
+      var r = 8 + Math.random() * 25;
+      sp[i*3] = r * Math.sin(ph) * Math.cos(th);
+      sp[i*3+1] = r * Math.sin(ph) * Math.sin(th);
+      sp[i*3+2] = r * Math.cos(ph);
+    }
+    starsGeom.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+    var starsMat = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.015,
+      transparent: true,
+      opacity: 0.4,
+      sizeAttenuation: true,
+    });
+    scene.add(new THREE.Points(starsGeom, starsMat));
+
+    // ─── Responsive Alignment Camera Math ───
+    function updateGlobePosition() {
+      var w = container.clientWidth;
+      var h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+
+      // Half-width in Three.js units at depth z = 0
+      var halfHeight = camera.position.z * Math.tan(camera.fov * Math.PI / 360);
+      var halfWidth = halfHeight * camera.aspect;
+
+      // Center the globe slightly to the left of the right screen edge
+      var targetX = halfWidth - 0.05;
+
+      earth.position.x = targetX;
+      clouds.position.x = targetX;
+      atmos.position.x = targetX;
+      halo.position.x = targetX;
+    }
+
+    // Set initial position
+    updateGlobePosition();
+
+    // ─── Drag-to-Rotate Interaction ───
+    var isDragging = false;
+    var previousPointerPosition = { x: 0, y: 0 };
+    var rotationSpeedX = 0;
+    var rotationSpeedY = 0;
+    var lastInteractionTime = Date.now();
+
+    function onPointerDown(e) {
+      if (e.button !== 0 && e.pointerType === 'mouse') return;
+      isDragging = true;
+      try {
+        interactiveZone.setPointerCapture(e.pointerId);
+      } catch (err) {}
+      previousPointerPosition = { x: e.clientX, y: e.clientY };
+      rotationSpeedX = 0;
+      rotationSpeedY = 0;
+      lastInteractionTime = Date.now();
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging) return;
+
+      var deltaX = e.clientX - previousPointerPosition.x;
+      var deltaY = e.clientY - previousPointerPosition.y;
+
+      var sensitivity = 0.0035;
+      earth.rotation.y += deltaX * sensitivity;
+      earth.rotation.x += deltaY * sensitivity;
+
+      var limit = Math.PI / 2.5;
+      earth.rotation.x = Math.max(-limit, Math.min(limit, earth.rotation.x));
+
+      // Sync cloud rotation
+      clouds.rotation.y += deltaX * sensitivity;
+      clouds.rotation.x += deltaY * sensitivity;
+      clouds.rotation.x = Math.max(-limit, Math.min(limit, clouds.rotation.x));
+
+      rotationSpeedY = deltaX * sensitivity;
+      rotationSpeedX = deltaY * sensitivity;
+
+      previousPointerPosition = { x: e.clientX, y: e.clientY };
+      lastInteractionTime = Date.now();
+    }
+
+    function onPointerUp(e) {
+      if (isDragging) {
+        isDragging = false;
+        try {
+          interactiveZone.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+      }
+      lastInteractionTime = Date.now();
+    }
+
+    // Attach interaction events to interactive zone
+    interactiveZone.addEventListener('pointerdown', onPointerDown);
+    interactiveZone.addEventListener('pointermove', onPointerMove);
+    interactiveZone.addEventListener('pointerup', onPointerUp);
+    interactiveZone.addEventListener('pointercancel', onPointerUp);
+
+    // ─── Animation Loop ───
+    var targetTiltX = 0.41;
+
+    function renderFrame() {
+      // Calculate view-space sun direction
+      if (earthMat.userData.shader || atmosMat) {
+        var sunDirView = new THREE.Vector3().copy(sun.position).normalize().applyMatrix4(camera.matrixWorldInverse).normalize();
+        if (earthMat.userData.shader) {
+          earthMat.userData.shader.uniforms.uSunDir.value.copy(sunDirView);
+        }
+        atmosMat.uniforms.uSunDir.value.copy(sunDirView);
+      }
+
+      if (isDragging) {
+        // Updated in pointermove
+      } else {
+        // Apply momentum
+        earth.rotation.y += rotationSpeedY;
+        earth.rotation.x += rotationSpeedX;
+        clouds.rotation.y += rotationSpeedY;
+        clouds.rotation.x += rotationSpeedX;
+
+        var limit = Math.PI / 2.5;
+        earth.rotation.x = Math.max(-limit, Math.min(limit, earth.rotation.x));
+        clouds.rotation.x = Math.max(-limit, Math.min(limit, clouds.rotation.x));
+
+        // Decay momentum
+        rotationSpeedY *= 0.95;
+        rotationSpeedX *= 0.95;
+
+        // Auto-rotation resumption: smooth blending based on user spin speed
+        var currentSpeed = Math.abs(rotationSpeedY) + Math.abs(rotationSpeedX);
+        var autoRotationBlend = Math.min(1.0, Math.max(0.0, 1.0 - currentSpeed * 15.0));
+
+        earth.rotation.y += 0.0006 * autoRotationBlend;
+        clouds.rotation.y += 0.0008 * autoRotationBlend;
+
+        earth.rotation.x += (targetTiltX - earth.rotation.x) * 0.01 * autoRotationBlend;
+        clouds.rotation.x += (targetTiltX - clouds.rotation.x) * 0.01 * autoRotationBlend;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    // ─── Intersection Observer ───
+    var active = false;
+    var obs = new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) {
+        if (!active) {
+          active = true;
+          renderer.setAnimationLoop(loop);
+        }
+      } else {
+        if (active) {
+          active = false;
+          renderer.setAnimationLoop(null);
+        }
+      }
+    }, { threshold: 0.05 });
+    obs.observe(container);
+
+    function loop() {
+      renderFrame();
+    }
+
+    // ─── Resize ───
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        var w = container.clientWidth;
+        var h = container.clientHeight;
+        renderer.setSize(w, h);
+        updateGlobePosition();
+      }, 150);
+    });
+  }
+
+  // ─── Boot ───
+  initGlobe().catch(console.error);
+</script>
