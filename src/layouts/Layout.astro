@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import NavBar from '../components/layout/NavBar.astro';
 import Footer from '../components/layout/Footer.astro';
+import Analytics from '@vercel/analytics/astro';
 
 export interface Props {
   title?: string;
@@ -93,5 +94,6 @@ const pageTitle = title === 'Complete World History' ? title : `${title} — Com
         flex-direction: column;
       }
     </style>
+    <Analytics />
   </body>
 </html>
